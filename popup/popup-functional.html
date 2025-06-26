@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Outliner AI</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 400px;
+        min-width: 400px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: white;
+        color: #333;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      .status {
+        padding: 12px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #667eea;
+      }
+
+      .mode-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        background: white;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.2s ease;
+      }
+
+      .mode-btn:hover {
+        border-color: #667eea;
+        background: #f8f9ff;
+      }
+
+      .mode-btn.active {
+        border-color: #667eea;
+        background: #f8f9ff;
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.1);
+      }
+
+      .summarize-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: all 0.2s ease;
+      }
+
+      .summarize-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
+
+      .summarize-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .result-area {
+        margin-top: 20px;
+        padding: 16px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e1e5e9;
+        display: none;
+        max-height: 250px;
+        overflow-y: auto;
+      }
+
+      .result-content {
+        line-height: 1.6;
+        word-wrap: break-word;
+      }
+
+      .loader {
+        display: none;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .copy-btn {
+        margin-top: 10px;
+        padding: 8px 12px;
+        background: #f8f9fa;
+        border: 1px solid #e1e5e9;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+      }
+
+      .copy-btn:hover {
+        background: #e9ecef;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>🤖 Outliner AI</h1>
+      <p>Intelligent Webpage Summarizer</p>
+    </div>
+
+    <div class="content">
+      <div class="status" id="status">
+        <p id="statusText">📄 Ready to summarize page</p>
+      </div>
+
+      <h3>Summary Mode</h3>
+
+      <button class="mode-btn active" data-mode="brief">
+        ⚡ <strong>Brief</strong> - Quick overview
+      </button>
+
+      <button class="mode-btn" data-mode="detailed">
+        📋 <strong>Detailed</strong> - Comprehensive summary
+      </button>
+
+      <button class="mode-btn" data-mode="bullets">
+        📝 <strong>Bullets</strong> - Key points list
+      </button>
+
+      <button class="summarize-btn" id="summarizeBtn">Summarize Page</button>
+
+      <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>Generating summary...</p>
+      </div>
+
+      <div class="result-area" id="resultArea">
+        <h4>Summary Result</h4>
+        <div class="result-content" id="resultContent"></div>
+        <button class="copy-btn" id="copyBtn">📋 Copy to Clipboard</button>
+      </div>
+    </div>
+
+    <script>
+      class SimplePopupController {
+        constructor() {
+          this.selectedMode = "brief";
+          this.currentTabId = null;
+          this.initializeElements();
+          this.attachEventListeners();
+          this.loadCurrentTab();
+        }
+
+        initializeElements() {
+          this.statusText = document.getElementById("statusText");
+          this.modeButtons = document.querySelectorAll(".mode-btn");
+          this.summarizeBtn = document.getElementById("summarizeBtn");
+          this.loader = document.getElementById("loader");
+          this.resultArea = document.getElementById("resultArea");
+          this.resultContent = document.getElementById("resultContent");
+          this.copyBtn = document.getElementById("copyBtn");
+        }
+
+        attachEventListeners() {
+          // Mode selection
+          this.modeButtons.forEach((btn) => {
+            btn.addEventListener("click", (e) =>
+              this.selectMode(e.target.closest(".mode-btn"))
+            );
+          });
+
+          // Summarize button
+          this.summarizeBtn.addEventListener("click", () =>
+            this.summarizePage()
+          );
+
+          // Copy button
+          this.copyBtn.addEventListener("click", () => this.copyToClipboard());
+        }
+
+        async loadCurrentTab() {
+          try {
+            const [tab] = await chrome.tabs.query({
+              active: true,
+              currentWindow: true,
+            });
+            this.currentTabId = tab.id;
+
+            if (
+              tab.url.startsWith("chrome://") ||
+              tab.url.startsWith("chrome-extension://")
+            ) {
+              this.updateStatus("❌ Cannot analyze this page type");
+              this.summarizeBtn.disabled = true;
+              return;
+            }
+
+            this.updateStatus("📄 Ready to analyze page");
+          } catch (error) {
+            console.error("Error loading current tab:", error);
+            this.updateStatus("❌ Error loading page");
+          }
+        }
+
+        selectMode(button) {
+          this.modeButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          this.selectedMode = button.dataset.mode;
+
+          const modeNames = {
+            brief: "⚡ Brief summary mode selected",
+            detailed: "📋 Detailed summary mode selected",
+            bullets: "📝 Bullet points mode selected",
+          };
+
+          this.updateStatus(modeNames[this.selectedMode]);
+        }
+
+        async summarizePage() {
+          try {
+            this.setLoadingState(true);
+            this.updateStatus("🔍 Extracting page content...");
+
+            // Get page content from content script
+            const response = await this.sendMessageToTab({
+              action: "extractContent",
+            });
+
+            if (!response || !response.success) {
+              throw new Error(response?.error || "Failed to extract content");
+            }
+
+            const { content, title, wordCount } = response.data;
+
+            if (!content || content.trim().length < 50) {
+              throw new Error("Insufficient content found on page");
+            }
+
+            this.updateStatus("🤖 Generating summary...");
+
+            // Send to background script for processing
+            const summaryResponse = await chrome.runtime.sendMessage({
+              action: "generateSummary",
+              data: {
+                content,
+                title,
+                mode: this.selectedMode,
+                wordCount,
+              },
+            });
+
+            if (!summaryResponse || !summaryResponse.success) {
+              throw new Error(
+                summaryResponse?.error || "Failed to generate summary"
+              );
+            }
+
+            this.displayResult(summaryResponse.data);
+            this.updateStatus("✅ Summary generated successfully");
+          } catch (error) {
+            console.error("Error summarizing page:", error);
+            this.updateStatus(`❌ ${error.message}`);
+            this.resultContent.textContent = `Error: ${error.message}`;
+            this.resultArea.style.display = "block";
+          } finally {
+            this.setLoadingState(false);
+          }
+        }
+
+        async sendMessageToTab(message) {
+          return new Promise((resolve) => {
+            chrome.tabs.sendMessage(this.currentTabId, message, (response) => {
+              if (chrome.runtime.lastError) {
+                resolve({
+                  success: false,
+                  error: chrome.runtime.lastError.message,
+                });
+              } else {
+                resolve(response);
+              }
+            });
+          });
+        }
+
+        displayResult(data) {
+          const { summary } = data;
+          this.resultContent.innerHTML = this.formatSummary(
+            summary,
+            this.selectedMode
+          );
+          this.resultArea.style.display = "block";
+        }
+
+        formatSummary(summary, mode) {
+          switch (mode) {
+            case "bullets":
+              if (!summary.includes("•") && !summary.includes("-")) {
+                const sentences = summary
+                  .split(/[.!?]+/)
+                  .filter((s) => s.trim().length > 10);
+                return (
+                  "<ul>" +
+                  sentences.map((s) => `<li>${s.trim()}</li>`).join("") +
+                  "</ul>"
+                );
+              }
+              return summary
+                .split("\n")
+                .map((line) => {
+                  const cleaned = line.replace(/^[-•*]\s*/, "").trim();
+                  return cleaned ? `<li>${cleaned}</li>` : "";
+                })
+                .filter(Boolean)
+                .join("");
+
+            case "detailed":
+              return `<div>${summary
+                .split("\n\n")
+                .map((p) => `<p>${p.trim()}</p>`)
+                .join("")}</div>`;
+
+            default:
+              return `<p>${summary}</p>`;
+          }
+        }
+
+        async copyToClipboard() {
+          try {
+            const textContent =
+              this.resultContent.textContent || this.resultContent.innerText;
+            await navigator.clipboard.writeText(textContent);
+
+            const originalText = this.copyBtn.textContent;
+            this.copyBtn.textContent = "✓ Copied!";
+            setTimeout(() => {
+              this.copyBtn.textContent = originalText;
+            }, 1000);
+          } catch (error) {
+            console.error("Error copying to clipboard:", error);
+          }
+        }
+
+        setLoadingState(loading) {
+          this.summarizeBtn.disabled = loading;
+          this.loader.style.display = loading ? "block" : "none";
+          this.resultArea.style.display = loading
+            ? "none"
+            : this.resultArea.style.display;
+        }
+
+        updateStatus(message) {
+          this.statusText.textContent = message;
+        }
+      }
+
+      // Initialize when DOM is loaded
+      document.addEventListener("DOMContentLoaded", () => {
+        new SimplePopupController();
+      });
+    </script>
+  </body>
+</html>
