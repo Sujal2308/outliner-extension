@@ -87,7 +87,8 @@ class ContentExtractor {
           `Selector ${selector}: ${text.length} chars, score: ${score}`
         );
 
-        if (score > bestScore && text.length > 200) {
+        if (score > bestScore && text.length > 100) {
+          // Reduced from 200
           bestContent = text;
           bestScore = score;
         }
@@ -95,13 +96,15 @@ class ContentExtractor {
     }
 
     // Strategy 2: If no good main content found, use smart body extraction
-    if (bestScore < 50 || bestContent.length < 500) {
+    if (bestScore < 50 || bestContent.length < 300) {
+      // Reduced from 500
       console.log("Using smart body extraction");
       bestContent = this.smartBodyExtraction();
     }
 
     // Strategy 3: Enhanced fallback with paragraph analysis
-    if (bestContent.length < 200) {
+    if (bestContent.length < 150) {
+      // Reduced from 200
       console.log("Using paragraph analysis fallback");
       bestContent = this.extractLongestParagraphs();
     }
@@ -166,7 +169,7 @@ class ContentExtractor {
         text: p.textContent.trim(),
         score: this.scoreParagraph(p),
       }))
-      .filter((p) => p.text.length > 50 && p.score > 0)
+      .filter((p) => p.text.length > 30 && p.score > 0) // Reduced from 50
       .sort((a, b) => b.score - a.score);
 
     // Take the top-scoring paragraphs that are likely part of the main content
@@ -180,6 +183,7 @@ class ContentExtractor {
   scoreParagraph(paragraph) {
     let score = 0;
     const text = paragraph.textContent.trim();
+    const lowerText = text.toLowerCase();
 
     // Length bonus
     score += Math.min(text.length / 50, 10);
@@ -207,11 +211,49 @@ class ContentExtractor {
         className.includes("sidebar") ||
         className.includes("menu") ||
         className.includes("footer") ||
-        className.includes("header")
+        className.includes("header") ||
+        className.includes("contact") ||
+        className.includes("support") ||
+        className.includes("help")
       )
-        score -= 5;
+        score -= 10;
 
       parent = parent.parentElement;
+    }
+
+    // Heavy penalty for footer/support content
+    const footerKeywords = [
+      "examples might be simplified",
+      "constantly reviewed",
+      "warrant full correctness",
+      "terms of use",
+      "cookie and privacy policy",
+      "all rights reserved",
+      "copyright",
+      "powered by",
+      "w3schools",
+      "refsnes data",
+      "contact support",
+      "technical support",
+      "customer service",
+      "report a bug",
+      "feedback and suggestions",
+      "websites use cookies",
+      "cookies to personalize",
+      "personalize user experience",
+      "improve site performance",
+      "control cookie settings",
+      "manage their privacy",
+      "robust cybersecurity solutions",
+      "cybersecurity solutions",
+      "encompassing people",
+      "processes and technology",
+      "protecting individuals",
+      "cyber threats",
+    ];
+
+    if (footerKeywords.some((keyword) => lowerText.includes(keyword))) {
+      score -= 50; // Heavy penalty
     }
 
     // Penalty for navigation-like text
@@ -223,8 +265,11 @@ class ContentExtractor {
       "login",
       "search",
       "subscribe",
+      "click here",
+      "read more",
+      "continue reading",
     ];
-    const wordsInText = text.toLowerCase().split(/\s+/);
+    const wordsInText = lowerText.split(/\s+/);
     const navWordCount = wordsInText.filter((word) =>
       navKeywords.includes(word)
     ).length;
@@ -278,6 +323,17 @@ class ContentExtractor {
       ".secondary",
       "#sidebar",
       "#widgets",
+      // Footer and contact elements
+      ".footer",
+      ".site-footer",
+      ".page-footer",
+      ".contact",
+      ".contact-info",
+      ".support",
+      ".help",
+      "#footer",
+      "#contact",
+      "#support",
       // Ads and promotional content
       ".ads",
       ".advertisement",
@@ -332,6 +388,8 @@ class ContentExtractor {
       "[class*='cookie']",
       "[class*='gdpr']",
       "[class*='privacy']",
+      "[class*='terms']",
+      "[class*='legal']",
       // Search and forms
       ".search",
       ".search-form",
@@ -359,6 +417,7 @@ class ContentExtractor {
       const className = el.className?.toLowerCase() || "";
       const id = el.id?.toLowerCase() || "";
       const role = el.getAttribute("role")?.toLowerCase() || "";
+      const textContent = el.textContent?.toLowerCase() || "";
 
       // Remove elements with navigation-like characteristics
       if (
@@ -368,13 +427,50 @@ class ContentExtractor {
         className.includes("footer") ||
         className.includes("sidebar") ||
         className.includes("widget") ||
+        className.includes("contact") ||
+        className.includes("support") ||
+        className.includes("terms") ||
+        className.includes("privacy") ||
+        className.includes("cookie") ||
+        className.includes("legal") ||
         id.includes("nav") ||
         id.includes("menu") ||
         id.includes("header") ||
         id.includes("footer") ||
+        id.includes("contact") ||
+        id.includes("support") ||
         role === "navigation" ||
         role === "banner" ||
         role === "contentinfo"
+      ) {
+        el.remove();
+        return;
+      }
+
+      // Remove elements with footer-like content
+      if (
+        textContent.includes("examples might be simplified") ||
+        textContent.includes("constantly reviewed to avoid errors") ||
+        textContent.includes("warrant full correctness") ||
+        textContent.includes("terms of use") ||
+        textContent.includes("cookie and privacy policy") ||
+        textContent.includes("all rights reserved") ||
+        textContent.includes("powered by") ||
+        textContent.includes("refsnes data") ||
+        textContent.includes("w3schools") ||
+        textContent.includes("websites use cookies") ||
+        textContent.includes("cookies to personalize") ||
+        textContent.includes("personalize user experience") ||
+        textContent.includes("improve site performance") ||
+        textContent.includes("control cookie settings") ||
+        textContent.includes("manage their privacy") ||
+        textContent.includes("robust cybersecurity solutions") ||
+        textContent.includes("cybersecurity solutions") ||
+        textContent.includes("encompassing people") ||
+        textContent.includes("processes and technology") ||
+        textContent.includes("protecting individuals") ||
+        textContent.includes("cyber threats") ||
+        (textContent.includes("copyright") && textContent.includes("20"))
       ) {
         el.remove();
       }
@@ -552,14 +648,35 @@ class ContentExtractor {
   cleanContent(content) {
     if (!content) return "";
 
+    console.log("Original content length:", content.length);
+
+    // Pre-filter: Remove entire sections that are clearly cookie/cybersecurity boilerplate
+    const boilerplatePatterns = [
+      /these cookies also allow us to count visits and traffic sources so we can measure and improve the performance of our site/gi,
+      /these cookies provide metrics related to the performance and usability of our site/gi,
+      /with more visibility and context into data security threats.*cybersecurity teams.*eliminate.*impact.*reduce.*severity.*scope.*attack/gi,
+      /visibility and context into data security.*events.*surface.*awareness.*cybersecurity.*eliminate.*impact/gi,
+      /cybersecurity teams to quickly eliminate any further impact and reduce the severity and scope of the attack/gi,
+    ];
+
+    let preFilteredContent = content;
+    for (const pattern of boilerplatePatterns) {
+      preFilteredContent = preFilteredContent.replace(pattern, "");
+    }
+
+    console.log("After pre-filtering length:", preFilteredContent.length);
+
     // Split into lines and filter out low-quality fragments
-    let lines = content
+    let lines = preFilteredContent
       .split("\n")
       .map((line) => line.trim())
       .filter((line) => line.length > 0);
 
-    // Remove navigation-like lines and common website fragments
+    console.log("Lines before filtering:", lines.length);
+
+    // Enhanced patterns to catch footer/contact/support content (more targeted)
     const fragmentPatterns = [
+      // Navigation and UI elements (exact matches only)
       /^(home|about|contact|menu|login|search|subscribe|newsletter)$/i,
       /^(privacy policy|terms of service|cookie policy)$/i,
       /^(follow us|social media|share this)$/i,
@@ -568,14 +685,26 @@ class ContentExtractor {
       /^(prev|previous|next|continue|read more)$/i,
       /^(breadcrumbs?|navigation|site map)$/i,
       /^(sidebar|footer|header|banner)$/i,
+
+      // Only very specific cookie/cybersecurity patterns
+      /these cookies also allow us to count visits and traffic sources so we can measure and improve the performance of our site/i,
+      /these cookies provide metrics related to the performance and usability of our site/i,
+      /robust cybersecurity solutions encompassing people processes and technology/i,
+
+      // Footer/support content patterns (only full specific phrases)
+      /examples might be simplified to improve reading and learning/i,
+      /constantly reviewed to avoid errors but we cannot warrant full correctness/i,
+      /while using.*you agree.*terms of use.*cookie.*privacy policy/i,
+      /copyright.*all rights reserved/i,
+      /powered by/i,
+      /optimized for learning and training/i,
+      /refsnes data/i,
+      /w3schools/i,
+
+      // Short fragments
       /^[^a-zA-Z]*$/, // Lines with no letters
       /^\d+$/, // Lines with only numbers
-      /^.{1,10}$/, // Very short lines (likely fragments)
-      /copy article link/i,
-      /preview mode/i,
-      /documentation/i,
-      /learning objectives/i,
-      /related content/i,
+      /^.{1,8}$/, // Very short lines (likely fragments)
     ];
 
     lines = lines.filter((line) => {
@@ -584,62 +713,129 @@ class ContentExtractor {
         return false;
       }
 
+      // Additional filtering for footer/support content
+      const lowerLine = line.toLowerCase();
+
+      // Filter out common footer phrases (more targeted)
+      const footerPhrases = [
+        "examples might be simplified",
+        "constantly reviewed to avoid errors",
+        "warrant full correctness",
+        "terms of use",
+        "cookie and privacy policy",
+        "all rights reserved",
+        "powered by",
+        "refsnes data",
+        "w3schools",
+        // Cookie-related phrases (only very specific ones)
+        "these cookies also allow us to count visits and traffic sources",
+        "cookies provide metrics related to the performance and usability",
+        "websites use cookies to personalize user experience",
+        // Cybersecurity boilerplate (only very specific full phrases)
+        "robust cybersecurity solutions encompassing people processes and technology",
+        "cybersecurity teams to quickly eliminate any further impact",
+      ];
+
+      if (footerPhrases.some((phrase) => lowerLine.includes(phrase))) {
+        return false;
+      }
+
+      // Filter out lines that are mostly links or references (more lenient)
+      const linkWordCount = (
+        line.match(
+          /\b(click here|read more|continue reading|learn more)\b/gi
+        ) || []
+      ).length;
+      const totalWords = line.split(/\s+/).length;
+      if (totalWords > 0 && linkWordCount / totalWords > 0.5) {
+        // Changed from 0.3 to 0.5
+        return false;
+      }
+
       // Keep lines that look like proper sentences or headings
       if (
-        line.length > 20 &&
+        line.length > 12 && // Further reduced from 15
         (line.includes(".") || line.includes("?") || line.includes("!"))
       ) {
         return true;
       }
 
-      // Keep longer lines that might be headings
-      if (line.length > 30) {
+      // Keep longer lines that might be headings or meaningful content
+      if (line.length > 20) {
+        // Reduced from 25
+        return true;
+      }
+
+      // Keep medium-length lines with multiple words (potential content)
+      if (line.length > 8 && line.split(/\s+/).length >= 2) {
+        // Reduced requirements
         return true;
       }
 
       return false;
     });
 
+    console.log("Lines after filtering:", lines.length);
+
     // Join lines back and clean up
     content = lines.join("\n\n");
 
-    return (
-      content
-        // Remove excessive whitespace
-        .replace(/\s+/g, " ")
-        // Remove multiple newlines
-        .replace(/\n\s*\n\s*\n/g, "\n\n")
-        // Remove leading/trailing whitespace
-        .trim()
-        // Remove common noise patterns
-        .replace(
-          /\b(click here|read more|continue reading|advertisement|sponsored|copy article link|preview mode|learning objectives|related content)\b/gi,
-          ""
-        )
-        // Remove isolated punctuation
-        .replace(/\s+[.,;:!?]+\s+/g, " ")
-        // Remove excessive punctuation
-        .replace(/[.,;:!?]{2,}/g, ".")
-        // Remove repeated phrases (common in navigation)
-        .replace(/(.{10,}?)\s+\1/gi, "$1")
-        // Clean up spaces
-        .replace(/\s+/g, " ")
-        // Remove lines that are just website elements
-        .split("\n")
-        .filter((line) => {
-          const trimmed = line.trim();
-          return (
-            trimmed.length > 30 && // Minimum length
-            !trimmed.match(
-              /^(What is|Define|Explain|Understand|After reading)/i
-            ) && // Learning objective fragments
-            !trimmed.match(/^[A-Z][a-z]+ [A-Z][a-z]+$/) && // Two-word titles (likely navigation)
-            trimmed.split(" ").length > 5
-          ); // At least 5 words
-        })
-        .join("\n\n")
-        .trim()
+    const finalContent = content
+      // Remove excessive whitespace
+      .replace(/\s+/g, " ")
+      // Remove multiple newlines
+      .replace(/\n\s*\n\s*\n/g, "\n\n")
+      // Remove leading/trailing whitespace
+      .trim()
+      // Remove common noise patterns (more targeted)
+      .replace(
+        /\b(examples might be simplified|constantly reviewed|warrant full correctness|terms of use|cookie and privacy policy|all rights reserved|powered by|w3schools|refsnes data)\b/gi,
+        ""
+      )
+      // Remove isolated punctuation
+      .replace(/\s+[.,;:!?]+\s+/g, " ")
+      // Remove excessive punctuation
+      .replace(/[.,;:!?]{2,}/g, ".")
+      // Remove repeated phrases (common in navigation)
+      .replace(/(.{10,}?)\s+\1/gi, "$1")
+      // Clean up spaces
+      .replace(/\s+/g, " ")
+      // Remove lines that are just website elements
+      .split("\n")
+      .filter((line) => {
+        const trimmed = line.trim();
+        const lowerTrimmed = trimmed.toLowerCase();
+
+        // Remove only very specific boilerplate content
+        const genericPatterns = [
+          /^websites use cookies to personalize user experience and improve site performance$/i,
+          /^robust cybersecurity solutions encompassing people processes and technology$/i,
+          /^examples might be simplified to improve reading and learning$/i,
+        ];
+
+        if (genericPatterns.some((pattern) => pattern.test(trimmed))) {
+          return false;
+        }
+
+        return (
+          trimmed.length > 15 && // Further reduced minimum length
+          !trimmed.match(
+            /^(What is|Define|Explain|Understand|After reading)$/i
+          ) && // Learning objective fragments (exact match only)
+          !trimmed.match(/^[A-Z][a-z]+ [A-Z][a-z]+$/) && // Two-word titles (likely navigation)
+          trimmed.split(" ").length > 2 // Reduced to at least 2 words
+        );
+      })
+      .join("\n\n")
+      .trim();
+
+    console.log("Final cleaned content length:", finalContent.length);
+    console.log(
+      "Final content preview:",
+      finalContent.substring(0, 200) + "..."
     );
+
+    return finalContent;
   }
 
   countWords(text) {

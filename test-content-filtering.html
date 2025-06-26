@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Filtering Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      .test-section {
+        margin: 30px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .main-content {
+        background: #f9f9f9;
+      }
+      .footer {
+        background: #ffe6e6;
+        color: #666;
+      }
+      .contact {
+        background: #e6f3ff;
+      }
+      .support {
+        background: #fff2e6;
+      }
+      h2 {
+        color: #333;
+        border-bottom: 2px solid #04aa6d;
+        padding-bottom: 10px;
+      }
+      .status {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: #04aa6d;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="status" id="extractionStatus">Ready for testing</div>
+
+    <h1>Content Filtering Test Page</h1>
+
+    <div class="test-section main-content">
+      <h2>Main Article Content</h2>
+      <p>
+        This is the main article content that should be included in the summary.
+        It contains valuable information about programming concepts and best
+        practices.
+      </p>
+
+      <p>
+        JavaScript is a versatile programming language that can be used for both
+        front-end and back-end development. It offers dynamic typing,
+        first-class functions, and powerful object-oriented programming
+        capabilities.
+      </p>
+
+      <p>
+        Understanding variable scope, closures, and asynchronous programming
+        patterns is essential for writing effective JavaScript code. These
+        concepts form the foundation of modern web development.
+      </p>
+
+      <h3>Key Programming Concepts</h3>
+      <p>
+        When learning programming, it's important to master fundamental concepts
+        such as data structures, algorithms, and design patterns. These skills
+        are transferable across different programming languages.
+      </p>
+    </div>
+
+    <div class="test-section footer">
+      <h2>Footer Content (Should be filtered)</h2>
+      <p>
+        Examples might be simplified to improve reading and learning. Tutorials,
+        references, and examples are constantly reviewed to avoid errors, but we
+        cannot warrant full correctness of all content.
+      </p>
+
+      <p>
+        While using W3Schools, you agree to have read and accepted our
+        <a href="#">terms of use</a>, <a href="#">cookie and privacy policy</a>.
+      </p>
+
+      <p>
+        Copyright 1999-2025 by Refsnes Data. All Rights Reserved. W3Schools is
+        Powered by W3.CSS.
+      </p>
+    </div>
+
+    <div class="test-section contact">
+      <h2>Contact Support (Should be filtered)</h2>
+      <p>
+        Contact support for technical assistance with your programming
+        questions.
+      </p>
+      <p>
+        Our customer service team is available 24/7 to help with any issues.
+      </p>
+      <p>Report a bug or provide feedback and suggestions for improvement.</p>
+    </div>
+
+    <div class="test-section support">
+      <h2>Help Documentation (Should be filtered)</h2>
+      <p>
+        Technical support documentation and help resources are available online.
+      </p>
+      <p>Click here to read more about our comprehensive learning platform.</p>
+      <p>
+        Continue reading our extensive tutorial library for advanced topics.
+      </p>
+    </div>
+
+    <script>
+      // Test the extension's content extraction
+      function testContentExtraction() {
+        const status = document.getElementById("extractionStatus");
+        status.textContent = "Testing content extraction...";
+        status.style.background = "#ff9500";
+
+        // The extension will extract content when activated
+        setTimeout(() => {
+          status.textContent = "Test the extension now!";
+          status.style.background = "#04aa6d";
+        }, 1000);
+      }
+
+      // Auto-start test
+      testContentExtraction();
+    </script>
+  </body>
+</html>

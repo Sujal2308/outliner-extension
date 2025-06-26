@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Article Test - Better Extraction</title>
+  </head>
+  <body>
+    <main>
+      <h1>How to Learn JavaScript</h1>
+
+      <p>
+        JavaScript is a powerful programming language that runs in web browsers.
+      </p>
+
+      <h2>Getting Started</h2>
+      <p>Start with the basics like variables and functions.</p>
+      <p>Practice with simple exercises daily.</p>
+
+      <h2>Best Practices</h2>
+      <p>Write clean, readable code.</p>
+      <p>Use meaningful variable names.</p>
+      <p>Comment your code properly.</p>
+
+      <h2>Resources</h2>
+      <p>Online tutorials are very helpful.</p>
+      <p>Practice coding challenges regularly.</p>
+      <p>Join developer communities for support.</p>
+    </main>
+
+    <!-- This should be filtered out -->
+    <footer>
+      <p>Examples might be simplified to improve reading and learning.</p>
+      <p>We cannot warrant full correctness of all content.</p>
+      <p>Copyright 2024 - All rights reserved.</p>
+    </footer>
+
+    <script>
+      console.log("Testing improved extraction...");
+
+      // Show expected content
+      window.addEventListener("load", function () {
+        const expectedWords = 60; // Approximately
+        const infoBox = document.createElement("div");
+        infoBox.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                width: 250px;
+                background: #e3f2fd;
+                border: 2px solid #2196f3;
+                padding: 10px;
+                z-index: 9999;
+                font-family: Arial, sans-serif;
+                font-size: 11px;
+                border-radius: 5px;
+            `;
+
+        infoBox.innerHTML = `
+                <h4 style="margin: 0 0 8px 0; color: #1976d2;">Extraction Test</h4>
+                <p><strong>Expected:</strong> ~${expectedWords} words</p>
+                <p><strong>Should extract:</strong></p>
+                <ul style="margin: 5px 0; padding-left: 15px; font-size: 10px;">
+                    <li>Title and headings</li>
+                    <li>All paragraph content</li>
+                    <li>Meaningful phrases</li>
+                </ul>
+                <p><strong>Should filter:</strong></p>
+                <ul style="margin: 5px 0; padding-left: 15px; font-size: 10px;">
+                    <li>Footer disclaimers</li>
+                    <li>Copyright notice</li>
+                </ul>
+                <p style="margin-top: 8px; font-size: 10px; color: #666;">
+                    Test with extension popup
+                </p>
+            `;
+
+        document.body.appendChild(infoBox);
+      });
+    </script>
+  </body>
+</html>

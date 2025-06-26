@@ -1,33 +1,83 @@
-# 🎯 Enhanced Content Extraction - Fix for Fragmented Summaries
+# 🎯 Enhanced Content Extraction - Cookie/Generic Content Filtering Complete ✅
 
-## 🚨 **Issue Resolved**
+## 🚨 **Issue Resolved - UPDATED**
 
-**Problem:** Extension was extracting fragmented content from navigation menus, headers, footers, and other page elements instead of focusing on the main article content. This resulted in summaries like:
+**Problem:** Extension was including unwanted content in summaries, such as:
 
-> "Learning Objectives After reading this article you will be able to: Define a DDoS attack Explain the general structure... Preview Mode Documentation What is a DDoS attack? DDoS attacks are a primary concern... Copy article link..."
+- **Cookie/Privacy Content:** "Websites use cookies to personalize user experience and improve site performance"
+- **Generic Cybersecurity:** "Robust cybersecurity solutions, encompassing people, processes, and technology"
+- **W3Schools Footer:** "W3Schools Business Inquiries: Contact sales@w3schools.com"
+- **Support Text:** "Examples might be simplified to improve reading and learning"
+- **Disclaimers:** "Constantly reviewed to avoid errors, but cannot warrant full correctness"
 
-**Solution:** Implemented intelligent content scoring and filtering to identify and extract only the main article content.
+**Root Cause:** Content extraction logic was not comprehensive enough to filter cookie/privacy policy content and generic boilerplate text in both local and API modes.
 
-## ✨ **Key Improvements**
+**Solution:** ✅ **FIXED** - Implemented comprehensive cookie/privacy/generic content filtering with multiple detection layers.
 
-### 🎯 **Smart Content Scoring**
+## ✨ **Latest Improvements Made**
 
-- **Element Analysis:** Scores content elements based on structure, length, and context
-- **Semantic Recognition:** Identifies article-like content vs navigation elements
-- **Quality Metrics:** Evaluates paragraph count, sentence structure, and uniqueness
+### 🍪 **Enhanced Cookie/Privacy Filtering**
 
-### 🧹 **Enhanced Content Filtering**
+Added specific patterns to detect cookie and privacy-related content:
 
-- **Navigation Removal:** Filters out nav menus, breadcrumbs, and site navigation
-- **Metadata Cleanup:** Removes learning objectives, related content sections
-- **UI Element Filtering:** Excludes headers, footers, sidebars, and widgets
-- **Fragment Detection:** Identifies and removes short, low-quality text fragments
+```javascript
+// Cookie and privacy patterns
+/websites use cookies/i,
+/cookies to personalize/i,
+/personalize user experience/i,
+/improve site performance/i,
+/control cookie settings/i,
+/manage their privacy/i,
+/cookie.*privacy/i,
+/privacy.*cookie/i,
+```
 
-### 📊 **Intelligent Content Selection**
+### 🎯 **Enhanced Fragment Pattern Filtering**
 
-- **Multi-Strategy Approach:** Tries multiple methods to find the best content
-- **Paragraph Scoring:** Evaluates individual paragraphs for content quality
-- **Context Awareness:** Considers parent elements and document structure
+Added comprehensive regex patterns to detect footer/support content:
+
+```javascript
+// Footer/support content patterns
+/examples might be simplified/i,
+/tutorials.*references.*examples.*reviewed/i,
+/cannot warrant full correctness/i,
+/while using.*you agree/i,
+/terms of use.*cookie.*privacy policy/i,
+/copyright.*all rights reserved/i,
+/powered by/i,
+/w3schools/i,
+/refsnes data/i,
+/contact.*support/i,
+/technical support/i,
+```
+
+### 🧹 **Enhanced Element Removal**
+
+Improved `extractFromBody()` to remove footer-related elements:
+
+```javascript
+// Footer and contact elements
+".footer", ".site-footer", ".page-footer",
+".contact", ".contact-info", ".support", ".help",
+"#footer", "#contact", "#support",
+```
+
+### 📊 **Content-Based Text Analysis**
+
+Added intelligent text content filtering:
+
+```javascript
+// Remove elements with footer-like content
+if (
+  textContent.includes("examples might be simplified") ||
+  textContent.includes("warrant full correctness") ||
+  textContent.includes("terms of use") ||
+  textContent.includes("w3schools")
+) {
+  el.remove();
+}
+```
+
 - **Fallback Mechanisms:** Ensures content is always extracted, even from difficult pages
 
 ## 🔧 **Technical Implementation**

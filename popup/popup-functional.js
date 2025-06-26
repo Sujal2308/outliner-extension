@@ -527,7 +527,7 @@ class PopupController {
       this.renderHistoryList(savedSummaries);
 
       // Show history view
-      this.historyView.style.display = "block";
+      this.historyView.style.display = "flex";
     } catch (error) {
       console.error("Error showing history:", error);
       this.updateStatus("❌ Failed to load history");

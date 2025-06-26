@@ -52,6 +52,7 @@
         transition: background-color 0.3s ease, color 0.3s ease;
         font-size: 15px;
         font-weight: 500;
+        overflow: hidden;
       }
 
       .header {
@@ -426,15 +427,17 @@
       }
 
       .history-view {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
+        width: 400px;
+        height: 100vh;
         background: var(--bg-primary);
         z-index: 1000;
-        overflow-y: auto;
+        overflow: hidden;
         transition: background-color 0.3s ease;
+        display: flex;
+        flex-direction: column;
       }
 
       .history-header {
@@ -465,7 +468,7 @@
       }
       .history-list {
         padding: 20px;
-        max-height: 400px;
+        flex: 1;
         overflow-y: auto;
       }
 
@@ -866,6 +869,16 @@
     </style>
   </head>
   <body>
+    <div class="history-view" id="historyView" style="display: none">
+      <div class="history-header">
+        <h4>Saved Summaries</h4>
+        <button class="close-history-btn" id="closeHistoryBtn">✕</button>
+      </div>
+      <div class="history-list" id="historyList">
+        <p class="no-summaries">No saved summaries yet</p>
+      </div>
+    </div>
+
     <div class="header">
       <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
       <h1>🤖 Outliner AI</h1>
@@ -1018,16 +1031,6 @@
               ✅ 100% Free • ✅ No Credit Card • ✅ Better Quality
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="history-view" id="historyView" style="display: none">
-        <div class="history-header">
-          <h4>Saved Summaries</h4>
-          <button class="close-history-btn" id="closeHistoryBtn">✕</button>
-        </div>
-        <div class="history-list" id="historyList">
-          <p class="no-summaries">No saved summaries yet</p>
         </div>
       </div>
     </div>

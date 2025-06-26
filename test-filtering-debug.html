@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Content Extraction Debug</title>
+  </head>
+  <body>
+    <h1>Sample Article for Testing</h1>
+
+    <article>
+      <h2>Introduction</h2>
+      <p>
+        This is a sample article with meaningful content that should be
+        extracted and summarized.
+      </p>
+
+      <p>
+        The content extraction system needs to identify this as the main content
+        area and preserve it while filtering out unwanted elements.
+      </p>
+
+      <h2>Main Content Section</h2>
+      <p>
+        Here we have multiple paragraphs that contain important information
+        about the topic being discussed.
+      </p>
+
+      <p>
+        Each paragraph contains substantial content that would be valuable for
+        summarization purposes.
+      </p>
+
+      <p>
+        The system should extract this content successfully without being overly
+        aggressive in its filtering.
+      </p>
+
+      <h2>Technical Details</h2>
+      <p>
+        Technical content often contains specific terminology and detailed
+        explanations.
+      </p>
+
+      <p>
+        This type of content should also be preserved as it contains valuable
+        information for users.
+      </p>
+
+      <p>
+        The filtering system needs to balance removing boilerplate while keeping
+        meaningful content.
+      </p>
+    </article>
+
+    <!-- Footer content that should be filtered out -->
+    <footer>
+      <p>Examples might be simplified to improve reading and learning.</p>
+      <p>We cannot warrant full correctness of all content.</p>
+      <p>Copyright 2024 - All rights reserved.</p>
+      <p>
+        These cookies also allow us to count visits and traffic sources so we
+        can measure and improve the performance of our site.
+      </p>
+    </footer>
+
+    <script>
+      // Test the content extraction
+      console.log("Testing content extraction...");
+
+      // Simulate the extension's content extraction
+      if (typeof contentExtractor !== "undefined") {
+        contentExtractor
+          .extractContent()
+          .then((data) => {
+            console.log("Extracted data:", data);
+            console.log("Content length:", data.content.length);
+            console.log("Word count:", data.wordCount);
+
+            // Display results
+            const resultsDiv = document.createElement("div");
+            resultsDiv.style.cssText = `
+                    position: fixed;
+                    top: 10px;
+                    right: 10px;
+                    width: 300px;
+                    background: #f0f0f0;
+                    border: 1px solid #ccc;
+                    padding: 10px;
+                    z-index: 9999;
+                    font-family: monospace;
+                    font-size: 12px;
+                    max-height: 400px;
+                    overflow-y: auto;
+                `;
+
+            resultsDiv.innerHTML = `
+                    <h3>Extraction Results</h3>
+                    <p><strong>Title:</strong> ${data.title}</p>
+                    <p><strong>Word Count:</strong> ${data.wordCount}</p>
+                    <p><strong>Content Length:</strong> ${data.content.length} chars</p>
+                    <h4>Extracted Content:</h4>
+                    <div style="white-space: pre-wrap; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 5px;">
+${data.content}
+                    </div>
+                `;
+
+            document.body.appendChild(resultsDiv);
+          })
+          .catch((error) => {
+            console.error("Extraction failed:", error);
+
+            const errorDiv = document.createElement("div");
+            errorDiv.style.cssText = `
+                    position: fixed;
+                    top: 10px;
+                    right: 10px;
+                    width: 300px;
+                    background: #ffebee;
+                    border: 1px solid #f44336;
+                    padding: 10px;
+                    z-index: 9999;
+                    font-family: monospace;
+                    font-size: 12px;
+                `;
+            errorDiv.innerHTML = `
+                    <h3 style="color: #f44336;">Extraction Error</h3>
+                    <p>${error.message}</p>
+                `;
+            document.body.appendChild(errorDiv);
+          });
+      } else {
+        console.log("Content extractor not loaded yet, waiting...");
+        setTimeout(() => {
+          if (typeof contentExtractor !== "undefined") {
+            location.reload();
+          }
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>
