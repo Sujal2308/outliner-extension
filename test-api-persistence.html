@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>API Key Persistence Test - Outliner AI</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      .test-section {
+        background: #f8f9fa;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+      .highlight {
+        background: #fff3cd;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-weight: bold;
+      }
+      .success {
+        background: #d1ecf1;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid #17a2b8;
+      }
+      .instructions {
+        background: #f8d7da;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid #dc3545;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔑 API Key Persistence Test</h1>
+
+    <div class="success">
+      <h3>✅ API Key Persistence Fixed!</h3>
+      <p>
+        The extension now properly saves and remembers your Gemini API key
+        between sessions. No more re-entering it every time!
+      </p>
+    </div>
+
+    <div class="test-section">
+      <h2>🧪 How to Test API Key Persistence</h2>
+
+      <h3>Step 1: Save Your API Key</h3>
+      <ol>
+        <li>Click the Outliner AI extension icon</li>
+        <li>Click <span class="highlight">"⚙️ API Settings"</span></li>
+        <li>
+          Enter your Gemini API key (get from
+          <a href="https://ai.google.dev/" target="_blank">Google AI Studio</a>)
+        </li>
+        <li>Click <span class="highlight">"Save Key"</span></li>
+        <li>
+          Notice status changes to
+          <span class="highlight">"✅ Gemini API key configured"</span>
+        </li>
+        <li>
+          Notice method indicator changes to
+          <span class="highlight">"GEMINI"</span>
+        </li>
+      </ol>
+
+      <h3>Step 2: Test Persistence</h3>
+      <ol>
+        <li>Close the extension popup</li>
+        <li>Navigate to a different page</li>
+        <li>Open the extension popup again</li>
+        <li>
+          ✅ <strong>Expected Result:</strong> Status should still show "GEMINI"
+          and API key should remain configured
+        </li>
+        <li>
+          Input field should show placeholder:
+          <span class="highlight">"API key configured (••••••••••••)"</span>
+        </li>
+      </ol>
+
+      <h3>Step 3: Test Summarization</h3>
+      <ol>
+        <li>Try summarizing this page</li>
+        <li>
+          Loading should show
+          <span class="highlight">"✨ Using Gemini AI..."</span>
+        </li>
+        <li>Summary should be high-quality and coherent</li>
+      </ol>
+    </div>
+
+    <div class="test-section">
+      <h2>🎯 What Was Fixed</h2>
+
+      <h3>Before (Broken)</h3>
+      <ul>
+        <li>❌ API key would disappear after closing popup</li>
+        <li>❌ Users had to re-enter key every session</li>
+        <li>❌ Inconsistent API key status detection</li>
+        <li>❌ Poor user experience</li>
+      </ul>
+
+      <h3>After (Fixed)</h3>
+      <ul>
+        <li>✅ API key persists across all sessions</li>
+        <li>✅ Chrome sync storage properly handles empty values</li>
+        <li>✅ Visual feedback shows API key status</li>
+        <li>✅ Seamless user experience</li>
+      </ul>
+    </div>
+
+    <div class="instructions">
+      <h3>📦 Publishing Strategy</h3>
+      <p>
+        <strong>Recommendation:</strong> Keep the user-provided API key
+        approach! Here's why:
+      </p>
+      <ul>
+        <li>
+          <strong>💰 Zero Cost:</strong> No API expenses for you as the
+          developer
+        </li>
+        <li>
+          <strong>🔒 Privacy:</strong> User data stays in their own Google
+          account
+        </li>
+        <li>
+          <strong>📈 Scalable:</strong> No cost scaling issues as user base
+          grows
+        </li>
+        <li>
+          <strong>⚡ Better Limits:</strong> Each user gets full 15
+          requests/minute
+        </li>
+        <li><strong>🏪 Store Compliant:</strong> Chrome Web Store friendly</li>
+      </ul>
+
+      <p><strong>💡 Pro Tip:</strong> Make API key setup super easy with:</p>
+      <ul>
+        <li>Clear onboarding flow</li>
+        <li>Step-by-step visual guide</li>
+        <li>Benefits explanation (quality comparison)</li>
+        <li>Graceful fallback to local processing</li>
+      </ul>
+    </div>
+
+    <div class="test-section">
+      <h2>📊 Content for Testing</h2>
+
+      <p>
+        This page provides sufficient content to test the API key persistence
+        and summarization quality. The enhanced Gemini API integration should
+        produce coherent summaries about API key management and persistence
+        fixes.
+      </p>
+
+      <h3>Key Topics to Summarize</h3>
+      <ul>
+        <li>API key persistence problem and solution</li>
+        <li>Testing methodology for verification</li>
+        <li>Publishing strategy recommendations</li>
+        <li>Technical implementation details</li>
+        <li>User experience improvements</li>
+      </ul>
+
+      <h3>Expected Summary Quality</h3>
+      <p>
+        <strong>With Gemini API:</strong> Should produce clean, well-structured
+        summaries that focus on the main topics of API key persistence, testing
+        procedures, and publishing recommendations.
+      </p>
+
+      <p>
+        <strong>Without API (Local):</strong> Should still work but may be less
+        coherent or miss some nuanced connections between topics.
+      </p>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const timestamp = new Date().toLocaleString();
+        const wordCount = document.body.innerText.split(/\s+/).length;
+
+        const info = document.createElement("div");
+        info.className = "success";
+        info.innerHTML = `
+                <h3>📊 Test Page Statistics</h3>
+                <p><strong>Generated:</strong> ${timestamp}</p>
+                <p><strong>Word Count:</strong> ~${wordCount} words</p>
+                <p><strong>Purpose:</strong> Test API key persistence and summarization quality</p>
+                <p><strong>Status:</strong> ✅ Ready for testing enhanced API key management</p>
+            `;
+        document.body.appendChild(info);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Java Data Types - W3Schools Style Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      .header {
+        background: #04aa6d;
+        color: white;
+        padding: 20px;
+      }
+      .nav {
+        background: #f1f1f1;
+        padding: 10px;
+      }
+      .content {
+        padding: 20px;
+      }
+      .footer {
+        background: #f1f1f1;
+        padding: 15px;
+        margin-top: 30px;
+        color: #777;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 20px 0;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #04aa6d;
+        color: white;
+      }
+      .note {
+        background: #ffffcc;
+        padding: 10px;
+        margin: 15px 0;
+        border-left: 6px solid #ffeb3b;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation - should be filtered out -->
+    <div class="nav">
+      Home | HTML | CSS | JavaScript | Python | Java | SQL | PHP | How To |
+      W3.CSS | C | C++ | C# | Bootstrap | React | MySQL | jQuery | Excel | XML |
+      Django | NumPy | Pandas | NodeJS | R | TypeScript | Git | PostgreSQL |
+      MongoDB | ASP | AI | GO | Kotlin | Sass | VUE | DSA | GEN AI | SCIPY | AWS
+      | CYBERSECURITY | DATA SCIENCE
+    </div>
+
+    <div class="header">
+      <h1>Java Data Types</h1>
+    </div>
+
+    <div class="content">
+      <!-- Main content - this should be included in summary -->
+      <h2>Java Data Types</h2>
+      <p>
+        Data types specify the different sizes and values that can be stored in
+        the variable. There are two types of data types in Java:
+      </p>
+
+      <ul>
+        <li>
+          <strong>Primitive data types:</strong> The primitive data types
+          include boolean, char, byte, short, int, long, float and double.
+        </li>
+        <li>
+          <strong>Non-primitive data types:</strong> The non-primitive data
+          types include Classes, Interfaces, and Arrays.
+        </li>
+      </ul>
+
+      <h3>Primitive Data Types</h3>
+      <p>
+        In Java language, primitive data types are the building blocks of data
+        manipulation. These are the most basic data types available in Java
+        language.
+      </p>
+
+      <p>
+        Java is a statically-typed programming language. It means, all variables
+        must be declared before its use. That is why we need to declare
+        variable's type and name.
+      </p>
+
+      <p>There are eight primitive data types in Java:</p>
+
+      <table>
+        <tr>
+          <th>Data Type</th>
+          <th>Description</th>
+          <th>Size</th>
+          <th>Range</th>
+        </tr>
+        <tr>
+          <td>byte</td>
+          <td>Stores whole numbers from -128 to 127</td>
+          <td>1 byte</td>
+          <td>-128 to 127</td>
+        </tr>
+        <tr>
+          <td>short</td>
+          <td>Stores whole numbers from -32,768 to 32,767</td>
+          <td>2 bytes</td>
+          <td>-32,768 to 32,767</td>
+        </tr>
+        <tr>
+          <td>int</td>
+          <td>Stores whole numbers from -2,147,483,648 to 2,147,483,647</td>
+          <td>4 bytes</td>
+          <td>-2,147,483,648 to 2,147,483,647</td>
+        </tr>
+        <tr>
+          <td>long</td>
+          <td>
+            Stores whole numbers from -9,223,372,036,854,775,808 to
+            9,223,372,036,854,775,807
+          </td>
+          <td>8 bytes</td>
+          <td>-9,223,372,036,854,775,808 to 9,223,372,036,854,775,807</td>
+        </tr>
+        <tr>
+          <td>float</td>
+          <td>
+            Stores fractional numbers. Sufficient for storing 6 to 7 decimal
+            digits
+          </td>
+          <td>4 bytes</td>
+          <td>6 to 7 decimal digits</td>
+        </tr>
+        <tr>
+          <td>double</td>
+          <td>
+            Stores fractional numbers. Sufficient for storing 15 decimal digits
+          </td>
+          <td>8 bytes</td>
+          <td>15 decimal digits</td>
+        </tr>
+        <tr>
+          <td>boolean</td>
+          <td>Stores true or false values</td>
+          <td>1 bit</td>
+          <td>true or false</td>
+        </tr>
+        <tr>
+          <td>char</td>
+          <td>Stores a single character/letter or ASCII values</td>
+          <td>2 bytes</td>
+          <td>0 to 65,536</td>
+        </tr>
+      </table>
+
+      <div class="note">
+        <strong>Note:</strong> When you assign a value to a primitive variable,
+        it is stored directly in memory. Primitive types are also the most
+        efficient in terms of memory and performance.
+      </div>
+
+      <h3>Example Usage</h3>
+      <p>
+        Here's how you declare variables of different primitive types in Java:
+      </p>
+      <pre>
+int myAge = 25;
+double myHeight = 5.9;
+char myGrade = 'A';
+boolean isStudent = true;
+        </pre
+      >
+
+      <p>
+        Understanding primitive data types is fundamental to Java programming as
+        they form the foundation for more complex data structures and
+        operations.
+      </p>
+    </div>
+
+    <!-- Footer content - this should be filtered out -->
+    <div class="footer">
+      <p>
+        Examples might be simplified to improve reading and learning. Tutorials,
+        references, and examples are constantly reviewed to avoid errors, but we
+        cannot warrant full correctness of all content. While using W3Schools,
+        you agree to have read and accepted our <a href="#">terms of use</a>,
+        <a href="#">cookie and privacy policy</a>.
+      </p>
+
+      <p>
+        Copyright 1999-2025 by Refsnes Data. All Rights Reserved. W3Schools is
+        Powered by W3.CSS.
+      </p>
+
+      <p>
+        W3Schools is optimized for learning and training. Examples might be
+        simplified to improve reading and learning.
+      </p>
+    </div>
+  </body>
+</html>

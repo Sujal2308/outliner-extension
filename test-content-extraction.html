@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Enhanced Content Extraction Test - DDoS Attack Example</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      .navigation {
+        background: #f5f5f5;
+        padding: 10px;
+        margin-bottom: 20px;
+      }
+      .sidebar {
+        float: right;
+        width: 200px;
+        background: #f9f9f9;
+        padding: 15px;
+        margin-left: 20px;
+      }
+      .main-content {
+        background: white;
+      }
+      .article-content {
+        margin-right: 240px;
+      }
+      .footer {
+        background: #333;
+        color: white;
+        padding: 20px;
+        margin-top: 40px;
+      }
+      .test-info {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation (should be filtered out) -->
+    <nav class="navigation">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/search">Search</a>
+    </nav>
+
+    <!-- Learning objectives (should be filtered out) -->
+    <div class="learning-objectives">
+      Learning Objectives After reading this article you will be able to: Define
+      a DDoS attack Explain the general structure of a DDoS attack Differentiate
+      between the 3 major categories of DDoS attacks Understand several DDoS
+      mitigation strategies
+    </div>
+
+    <!-- Related Content (should be filtered out) -->
+    <div class="related-content">
+      Related Content DDoS mitigation How to DDoS DoS and DDoS attack tools What
+      is a denial-of-service DoS attack?
+    </div>
+
+    <!-- Sidebar (should be filtered out) -->
+    <div class="sidebar">
+      <h3>Quick Links</h3>
+      <ul>
+        <li>Preview Mode</li>
+        <li>Documentation</li>
+        <li>Copy article link</li>
+      </ul>
+      <p>
+        An important part of the DDoS mitigation implemented by Cloudflare is
+        the use of an Anycast distributed network.
+      </p>
+    </div>
+
+    <!-- Main content (should be extracted) -->
+    <main class="main-content">
+      <article class="article-content">
+        <h1>What is a DDoS attack?</h1>
+
+        <div class="test-info">
+          <strong>🧪 Test Note:</strong> This page simulates the fragmented
+          content issue you experienced. The enhanced content extraction should
+          now focus on this main article content and ignore the navigation,
+          sidebar, and other page elements that were causing fragmented
+          summaries.
+        </div>
+
+        <p>
+          A Distributed Denial of Service (DDoS) attack is a malicious attempt
+          to disrupt the normal traffic of a targeted server, service, or
+          network by overwhelming the target or its surrounding infrastructure
+          with a flood of Internet traffic.
+        </p>
+
+        <p>
+          DDoS attacks achieve effectiveness by utilizing multiple compromised
+          computer systems as sources of attack traffic. Exploited machines can
+          include computers and other networked resources such as IoT devices.
+        </p>
+
+        <h2>How DDoS Attacks Work</h2>
+
+        <p>
+          From a high level, a DDoS attack is like an unexpected traffic jam
+          clogging up the highway, preventing regular traffic from arriving at
+          its destination. The attack traffic consists of seemingly legitimate
+          requests, making it difficult to separate the attack traffic from
+          normal traffic.
+        </p>
+
+        <p>
+          DDoS attacks are carried out with networks of Internet-connected
+          machines. These networks consist of computers and other devices (such
+          as IoT devices) which have been infected with malware, allowing them
+          to be controlled remotely by an attacker. These individual devices are
+          called bots (or zombies), and a group of bots is called a botnet.
+        </p>
+
+        <h2>Types of DDoS Attacks</h2>
+
+        <p>
+          DDoS attacks can be broadly categorized based on the components of
+          network connection they target. The three main categories are:
+        </p>
+
+        <h3>Volume-Based Attacks</h3>
+        <p>
+          Volume-based attacks include UDP floods, ICMP floods, and other
+          spoofed-packet floods. The attack's goal is to saturate the bandwidth
+          of the attacked site, and magnitude is measured in bits per second
+          (Bps).
+        </p>
+
+        <h3>Protocol Attacks</h3>
+        <p>
+          Protocol attacks include SYN floods, fragmented packet attacks, Ping
+          of Death, Smurf DDoS and more. This category of attacks consumes
+          actual server resources, or those of intermediate communication
+          equipment, such as firewalls and load balancers, and is measured in
+          packets per second (Pps).
+        </p>
+
+        <h3>Application Layer Attacks</h3>
+        <p>
+          Application layer attacks include low-and-slow attacks, GET/POST
+          floods, attacks that target Apache, Windows or OpenBSD vulnerabilities
+          and more. Comprised of seemingly legitimate and innocent requests, the
+          goal of these attacks is to crash the web server and is measured in
+          Requests per second (Rps).
+        </p>
+
+        <h2>DDoS Mitigation Strategies</h2>
+
+        <p>
+          Effective DDoS mitigation requires a comprehensive approach that
+          includes proper network architecture, traffic analysis, and response
+          protocols. Modern mitigation techniques involve distributed networks
+          that can absorb and filter malicious traffic before it reaches the
+          target.
+        </p>
+
+        <p>
+          Cloud-based DDoS protection services have become increasingly
+          important as they can provide the scale and sophistication needed to
+          defend against large-scale attacks. These services typically use
+          machine learning algorithms to distinguish between legitimate and
+          malicious traffic patterns.
+        </p>
+
+        <h2>Prevention and Best Practices</h2>
+
+        <p>
+          Organizations should implement multiple layers of protection including
+          firewalls, intrusion detection systems, and traffic monitoring tools.
+          Regular security assessments and incident response planning are
+          essential components of a robust DDoS defense strategy.
+        </p>
+
+        <p>
+          Understanding the evolving landscape of DDoS attacks helps
+          organizations better prepare their defenses and respond effectively
+          when attacks occur. As attackers develop new techniques, defensive
+          measures must also continue to evolve.
+        </p>
+      </article>
+    </main>
+
+    <!-- Footer (should be filtered out) -->
+    <footer class="footer">
+      <p>© 2025 Security Education Site. All rights reserved.</p>
+      <nav>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </footer>
+
+    <script>
+      // Add dynamic content for testing
+      document.addEventListener("DOMContentLoaded", function () {
+        const timestamp = new Date().toLocaleString();
+        const wordCount = document
+          .querySelector(".article-content")
+          .innerText.split(/\s+/).length;
+
+        const info = document.createElement("div");
+        info.className = "test-info";
+        info.innerHTML = `
+                <h3>📊 Content Extraction Test Results</h3>
+                <p><strong>Page loaded:</strong> ${timestamp}</p>
+                <p><strong>Main article word count:</strong> ~${wordCount} words</p>
+                <p><strong>Expected behavior:</strong> Extension should extract only the main article content about DDoS attacks, ignoring navigation, sidebar, learning objectives, and footer content.</p>
+                <p><strong>Test success criteria:</strong> Summary should focus on DDoS attack definition, types, and mitigation strategies rather than fragmented navigation text.</p>
+            `;
+        document.querySelector(".article-content").appendChild(info);
+      });
+    </script>
+  </body>
+</html>

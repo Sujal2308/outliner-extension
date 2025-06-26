@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Outliner AI API Integration Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      .test-section {
+        background: #f5f5f5;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+      h1,
+      h2 {
+        color: #333;
+      }
+      .highlight {
+        background: #fff3cd;
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+      .api-info {
+        background: #d1ecf1;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+      }
+      code {
+        background: #f8f9fa;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🤖 Outliner AI - API Integration Test Page</h1>
+
+    <div class="api-info">
+      <h3>🔧 API Integration Features</h3>
+      <p>
+        This extension now supports <strong>Google Gemini API</strong> for
+        enhanced summarization with local fallback.
+      </p>
+      <ul>
+        <li>
+          ✅ <strong>Gemini API Integration:</strong> High-quality AI-powered
+          summaries
+        </li>
+        <li>
+          ✅ <strong>Local Fallback:</strong> Works without API key using
+          built-in algorithms
+        </li>
+        <li>
+          ✅ <strong>API Key Management:</strong> Secure storage in Chrome sync
+          storage
+        </li>
+        <li>
+          ✅ <strong>Method Indicator:</strong> Shows whether using API or local
+          processing
+        </li>
+      </ul>
+    </div>
+
+    <div class="test-section">
+      <h2>📝 How to Test API Integration</h2>
+      <ol>
+        <li>
+          <strong>Without API Key (Local Mode):</strong>
+          <ul>
+            <li>Click the extension icon</li>
+            <li>
+              Notice the <span class="highlight">"LOCAL"</span> indicator in the
+              status
+            </li>
+            <li>Try summarizing this page - it will use local algorithms</li>
+          </ul>
+        </li>
+        <li>
+          <strong>With API Key (Gemini Mode):</strong>
+          <ul>
+            <li>Click "⚙️ API Settings" in the popup</li>
+            <li>Enter your Google Gemini API key</li>
+            <li>Click "Save Key"</li>
+            <li>
+              Notice the indicator changes to
+              <span class="highlight">"GEMINI"</span>
+            </li>
+            <li>Try summarizing - it will use Gemini API for better results</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <div class="test-section">
+      <h2>🔑 Getting a Gemini API Key</h2>
+      <p>To test the enhanced AI features:</p>
+      <ol>
+        <li>
+          Visit
+          <a href="https://ai.google.dev/" target="_blank">Google AI Studio</a>
+        </li>
+        <li>Sign in with your Google account</li>
+        <li>Click "Get API Key" and create a new project</li>
+        <li>Copy your API key (starts with <code>AIza</code>)</li>
+        <li>Paste it into the extension's API Settings</li>
+      </ol>
+      <p>
+        <strong>Note:</strong> API keys are stored securely and synced across
+        your Chrome browsers.
+      </p>
+    </div>
+
+    <div class="test-section">
+      <h2>📊 Content for Testing Summarization</h2>
+      <p>
+        This page contains enough content to test the summarization features.
+        The extension should be able to extract and summarize the following key
+        points:
+      </p>
+
+      <h3>Key Features Implemented</h3>
+      <ul>
+        <li>
+          <strong>Dual Processing Modes:</strong> The extension now supports
+          both Google Gemini API for high-quality summaries and local processing
+          as a reliable fallback.
+        </li>
+        <li>
+          <strong>Intelligent Fallback System:</strong> If the API key is
+          missing, invalid, or if the API request fails, the system
+          automatically falls back to local summarization.
+        </li>
+        <li>
+          <strong>Enhanced User Interface:</strong> Added API key management UI
+          with clear indicators showing which processing method is active.
+        </li>
+        <li>
+          <strong>Improved Font Readability:</strong> Increased font sizes and
+          weights throughout the popup for better user experience.
+        </li>
+        <li>
+          <strong>Security Best Practices:</strong> API keys are stored securely
+          using Chrome's sync storage and are not exposed in the UI after
+          saving.
+        </li>
+      </ul>
+
+      <h3>Technical Implementation Details</h3>
+      <p>The background script now includes:</p>
+      <ul>
+        <li>API key management with secure storage</li>
+        <li>Gemini API integration with proper error handling</li>
+        <li>Content length optimization for API efficiency</li>
+        <li>Mode-specific prompt engineering for better results</li>
+        <li>Comprehensive fallback mechanisms</li>
+      </ul>
+
+      <h3>User Experience Improvements</h3>
+      <p>The popup interface has been enhanced with:</p>
+      <ul>
+        <li>Clear visual indicators for processing method (LOCAL vs GEMINI)</li>
+        <li>Easy-to-use API key management section</li>
+        <li>Improved typography and readability</li>
+        <li>Better error messages and user feedback</li>
+        <li>Status updates throughout the summarization process</li>
+      </ul>
+    </div>
+
+    <div class="test-section">
+      <h2>🧪 Expected Test Results</h2>
+      <p>
+        <strong>Brief Mode:</strong> Should generate 1-2 concise sentences about
+        API integration and enhanced summarization.
+      </p>
+      <p>
+        <strong>Detailed Mode:</strong> Should create 4-6 sentences covering key
+        points like dual processing, API integration, and UI improvements.
+      </p>
+      <p>
+        <strong>Bullets Mode:</strong> Should extract 4-6 bullet points about
+        the main features and improvements.
+      </p>
+
+      <p>
+        With <strong>Gemini API</strong>, expect higher quality and more
+        coherent summaries. With <strong>local processing</strong>, expect good
+        but more basic summaries.
+      </p>
+    </div>
+
+    <script>
+      // Add some dynamic content for testing
+      document.addEventListener("DOMContentLoaded", function () {
+        const timestamp = new Date().toLocaleString();
+        const info = document.createElement("p");
+        info.innerHTML = `<strong>Page loaded at:</strong> ${timestamp}<br><strong>Word count:</strong> Approximately 500+ words<br><strong>Status:</strong> Ready for summarization testing`;
+        info.style.background = "#e8f5e8";
+        info.style.padding = "10px";
+        info.style.borderRadius = "5px";
+        info.style.margin = "20px 0";
+        document.body.appendChild(info);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Enhanced Loading Animation Test - Outliner AI</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      .test-section {
+        background: #f8f9fa;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+      .highlight {
+        background: #fff3cd;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-weight: bold;
+      }
+      .feature-list {
+        background: #d1ecf1;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+      }
+      h1,
+      h2 {
+        color: #333;
+      }
+      code {
+        background: #f8f9fa;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🎬 Enhanced Loading Animation Test Page</h1>
+
+    <div class="feature-list">
+      <h3>🎯 New Loading Features Added</h3>
+      <ul>
+        <li>
+          ✨ <strong>Multi-stage Loading:</strong> Shows different messages for
+          each processing step
+        </li>
+        <li>
+          🌈 <strong>Enhanced Animations:</strong> Spinner + bouncing dots +
+          progress bar
+        </li>
+        <li>
+          💫 <strong>Button Loading State:</strong> Summarize button shows
+          spinner when processing
+        </li>
+        <li>
+          📝 <strong>Dynamic Messages:</strong> Context-aware loading text based
+          on API/local mode
+        </li>
+        <li>
+          ⚡ <strong>Progress Indicator:</strong> Animated progress bar with
+          gradient
+        </li>
+      </ul>
+    </div>
+
+    <div class="test-section">
+      <h2>🎪 Loading Animation Stages</h2>
+      <p>
+        When you test the extension on this page, you'll see these loading
+        stages:
+      </p>
+      <ol>
+        <li>
+          <span class="highlight">🔍 Analyzing page content...</span> - Initial
+          stage
+        </li>
+        <li>
+          <span class="highlight">📄 Extracting content...</span> - Content
+          extraction
+        </li>
+        <li>
+          <span class="highlight">✨ Using Gemini AI...</span> (with API) or
+          <span class="highlight">💻 Using local processing...</span> (without
+          API)
+        </li>
+        <li>
+          <span class="highlight">🎯 Finalizing summary...</span> - Final
+          formatting
+        </li>
+      </ol>
+    </div>
+
+    <div class="test-section">
+      <h2>🎨 Visual Enhancements</h2>
+      <ul>
+        <li>
+          <strong>Animated Progress Bar:</strong> Shows completion progress with
+          gradient fill
+        </li>
+        <li>
+          <strong>Bouncing Dots:</strong> Three dots that bounce in sequence
+        </li>
+        <li><strong>Rotating Spinner:</strong> Classic loading spinner</li>
+        <li><strong>Shimmer Effect:</strong> Subtle top border animation</li>
+        <li>
+          <strong>Button State:</strong> Summarize button shows loading spinner
+          when active
+        </li>
+      </ul>
+    </div>
+
+    <div class="test-section">
+      <h2>📚 Content for Testing Summarization</h2>
+      <p>
+        This page contains substantial content to thoroughly test the loading
+        animation and summarization features. The enhanced loading system will
+        guide users through each step of the process, making the extension feel
+        more responsive and professional.
+      </p>
+
+      <h3>Key Improvements</h3>
+      <p>
+        <strong>Better User Experience:</strong> Users now see exactly what's
+        happening during summarization, reducing perceived wait time and
+        increasing confidence in the tool.
+      </p>
+
+      <p>
+        <strong>Visual Polish:</strong> The combination of multiple animation
+        types (spinner, dots, progress bar) creates a modern, engaging loading
+        experience that matches the quality of premium applications.
+      </p>
+
+      <p>
+        <strong>Contextual Feedback:</strong> The loading messages adapt based
+        on whether the user has configured a Gemini API key, providing relevant
+        information about which processing method is being used.
+      </p>
+
+      <p>
+        <strong>Technical Excellence:</strong> The loading system uses CSS
+        animations for smooth performance, properly manages DOM elements, and
+        includes error handling to ensure the UI remains responsive even if
+        something goes wrong.
+      </p>
+
+      <h3>Testing Different Scenarios</h3>
+      <p>Try the extension in different modes to see the loading variations:</p>
+      <ul>
+        <li>
+          <strong>Without API Key:</strong> Shows "Using local processing"
+          messages
+        </li>
+        <li><strong>With API Key:</strong> Shows "Using Gemini AI" messages</li>
+        <li>
+          <strong>Brief Mode:</strong> Faster processing with optimized prompts
+        </li>
+        <li><strong>Detailed Mode:</strong> More comprehensive analysis</li>
+        <li><strong>Bullets Mode:</strong> Structured extraction process</li>
+      </ul>
+
+      <h3>Additional Features</h3>
+      <p>The loading system also includes:</p>
+      <ul>
+        <li>Automatic stage progression with realistic timing</li>
+        <li>Graceful error handling that maintains animation consistency</li>
+        <li>Responsive design that works across different screen sizes</li>
+        <li>Dark mode compatibility with theme-aware colors</li>
+        <li>Performance optimization to prevent UI blocking</li>
+      </ul>
+    </div>
+
+    <div class="test-section">
+      <h2>🧪 How to Test</h2>
+      <ol>
+        <li>Click the Outliner AI extension icon</li>
+        <li>Choose any summary mode (Brief, Detailed, or Bullets)</li>
+        <li>Click "Summarize Page"</li>
+        <li>Watch the enhanced loading animation with multiple stages</li>
+        <li>Notice how the button itself shows a loading spinner</li>
+        <li>Observe the contextual messages based on your API configuration</li>
+      </ol>
+
+      <p>
+        <strong>Expected Result:</strong> A smooth, professional loading
+        experience with clear progress indication and contextual feedback
+        throughout the summarization process.
+      </p>
+    </div>
+
+    <script>
+      // Add some dynamic content for a more realistic test
+      document.addEventListener("DOMContentLoaded", function () {
+        const timestamp = new Date().toLocaleString();
+        const wordCount = document.body.innerText.split(/\s+/).length;
+
+        const info = document.createElement("div");
+        info.className = "test-section";
+        info.innerHTML = `
+                <h3>📊 Page Statistics</h3>
+                <p><strong>Generated:</strong> ${timestamp}</p>
+                <p><strong>Word Count:</strong> ~${wordCount} words</p>
+                <p><strong>Status:</strong> ✅ Ready for enhanced loading animation testing</p>
+                <p><strong>Animation Features:</strong> Multi-stage progress, contextual messages, visual polish</p>
+            `;
+        document.body.appendChild(info);
+      });
+    </script>
+  </body>
+</html>
