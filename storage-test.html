@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Storage Test - Outliner AI</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ccc;
+      }
+      button {
+        margin: 5px;
+        padding: 8px 15px;
+      }
+      .result {
+        margin: 10px 0;
+        padding: 10px;
+        background: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Outliner AI - Storage Test Page</h1>
+
+    <div class="test-section">
+      <h3>Test Summary Storage</h3>
+      <button onclick="testSave()">Save Test Summary</button>
+      <button onclick="testLoad()">Load Saved Summaries</button>
+      <button onclick="testClear()">Clear All Summaries</button>
+      <div id="test-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+      <h3>Sample Content for Summarization</h3>
+      <p>
+        This is a comprehensive test page designed to evaluate the functionality
+        of the Outliner AI Chrome extension. The extension provides powerful
+        summarization capabilities that can analyze webpage content and generate
+        three different types of summaries: brief overviews for quick
+        understanding, detailed analyses for comprehensive insights, and
+        bullet-point formats for easy scanning.
+      </p>
+
+      <p>
+        The summarization engine uses advanced text processing algorithms to
+        extract key information from web pages. It identifies important
+        sentences, analyzes content structure, and generates coherent summaries
+        that preserve the essential meaning while reducing length. The three
+        modes serve different use cases: brief for quick previews, detailed for
+        thorough understanding, and bullets for actionable takeaways.
+      </p>
+
+      <p>
+        With the new storage functionality, users can save their generated
+        summaries for later reference. Each saved summary includes metadata such
+        as the original page title, URL, summarization mode, word count, and
+        timestamp. The extension maintains a history of up to 50 summaries to
+        prevent storage bloat while providing sufficient historical reference.
+      </p>
+
+      <p>
+        Users can interact with saved summaries in multiple ways: copying the
+        content to clipboard for use in other applications, viewing the full
+        summary in the main interface for re-reading, or deleting individual
+        summaries to manage their collection. This creates a powerful workflow
+        for content curation and knowledge management.
+      </p>
+    </div>
+
+    <script>
+      // Test functions for storage functionality
+      function testSave() {
+        const testSummary = {
+          id: `test_${Date.now()}`,
+          title: "Storage Test Page",
+          url: window.location.href,
+          summary:
+            "This is a test summary to verify the storage functionality works correctly.",
+          mode: "brief",
+          wordCount: 150,
+          timestamp: Date.now(),
+          savedAt: new Date().toISOString(),
+        };
+
+        // Simulate extension storage
+        if (typeof chrome !== "undefined" && chrome.storage) {
+          chrome.storage.local.get("savedSummaries", (result) => {
+            const saved = result.savedSummaries || [];
+            saved.unshift(testSummary);
+            chrome.storage.local.set({ savedSummaries: saved }, () => {
+              document.getElementById("test-result").innerHTML =
+                '<span style="color: green;">✅ Test summary saved successfully!</span>';
+            });
+          });
+        } else {
+          document.getElementById("test-result").innerHTML =
+            '<span style="color: orange;">⚠️ Chrome extension context not available</span>';
+        }
+      }
+
+      function testLoad() {
+        if (typeof chrome !== "undefined" && chrome.storage) {
+          chrome.storage.local.get("savedSummaries", (result) => {
+            const saved = result.savedSummaries || [];
+            document.getElementById(
+              "test-result"
+            ).innerHTML = `<span style="color: blue;">📚 Found ${saved.length} saved summaries</span>`;
+          });
+        } else {
+          document.getElementById("test-result").innerHTML =
+            '<span style="color: orange;">⚠️ Chrome extension context not available</span>';
+        }
+      }
+
+      function testClear() {
+        if (typeof chrome !== "undefined" && chrome.storage) {
+          chrome.storage.local.set({ savedSummaries: [] }, () => {
+            document.getElementById("test-result").innerHTML =
+              '<span style="color: red;">🗑️ All summaries cleared</span>';
+          });
+        } else {
+          document.getElementById("test-result").innerHTML =
+            '<span style="color: orange;">⚠️ Chrome extension context not available</span>';
+        }
+      }
+
+      // Show initial status
+      document.addEventListener("DOMContentLoaded", () => {
+        if (typeof chrome !== "undefined" && chrome.storage) {
+          document.getElementById("test-result").innerHTML =
+            '<span style="color: green;">✅ Chrome extension API available</span>';
+        } else {
+          document.getElementById("test-result").innerHTML =
+            '<span style="color: orange;">⚠️ Load this page in Chrome with the extension installed</span>';
+        }
+      });
+    </script>
+  </body>
+</html>
