@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=400, initial-scale=1.0" />
+    <title>Outliner AI</title>
+    <link rel="stylesheet" href="popup.css" />
+    <style>
+      body {
+        width: 400px !important;
+        min-width: 400px !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="logo">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <h1>Outliner AI</h1>
+        </div>
+        <p class="subtitle">Intelligent Webpage Summarizer</p>
+      </header>
+
+      <main class="main-content">
+        <div class="status" id="status">
+          <div class="status-icon">📄</div>
+          <span id="statusText">Ready to summarize</span>
+        </div>
+
+        <div class="mode-selection">
+          <h3>Summary Mode</h3>
+          <div class="mode-buttons">
+            <button class="mode-btn active" data-mode="brief">
+              <div class="mode-icon">⚡</div>
+              <div class="mode-info">
+                <span class="mode-title">Brief</span>
+                <span class="mode-desc">Quick overview</span>
+              </div>
+            </button>
+
+            <button class="mode-btn" data-mode="detailed">
+              <div class="mode-icon">📋</div>
+              <div class="mode-info">
+                <span class="mode-title">Detailed</span>
+                <span class="mode-desc">Comprehensive summary</span>
+              </div>
+            </button>
+
+            <button class="mode-btn" data-mode="bullets">
+              <div class="mode-icon">📝</div>
+              <div class="mode-info">
+                <span class="mode-title">Bullets</span>
+                <span class="mode-desc">Key points list</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="action-section">
+          <button id="summarizeBtn" class="summarize-btn">
+            <span class="btn-text">Summarize Page</span>
+            <div class="btn-loader" id="btnLoader"></div>
+          </button>
+        </div>
+
+        <div class="result-section" id="resultSection" style="display: none">
+          <div class="result-header">
+            <h3>Summary</h3>
+            <div class="result-actions">
+              <button id="copyBtn" class="action-btn" title="Copy to clipboard">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path
+                    d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"
+                  ></path>
+                </svg>
+              </button>
+              <button id="clearBtn" class="action-btn" title="Clear results">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="15" y1="9" x2="9" y2="15"></line>
+                  <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="result-content" id="resultContent"></div>
+          <div class="result-meta" id="resultMeta"></div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-info">
+          <span id="wordCount">Ready</span>
+        </div>
+      </footer>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
