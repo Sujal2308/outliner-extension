@@ -1,0 +1,23 @@
+{
+  "name": "outliner-ai-extension",
+  "version": "1.0.0",
+  "description": "Chrome extension for intelligent webpage summarization",
+  "scripts": {
+    "build": "echo 'Extension built successfully'",
+    "test": "echo 'Tests would run here'",
+    "lint": "echo 'Linting would run here'",
+    "package": "powershell -Command \"Compress-Archive -Path .\\* -DestinationPath outliner-ai-extension.zip -Force\""
+  },
+  "keywords": [
+    "chrome-extension",
+    "summarization",
+    "ai",
+    "text-processing",
+    "productivity"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chrome": "^0.0.246"
+  }
+}
