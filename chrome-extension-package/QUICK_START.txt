@@ -1,0 +1,106 @@
+╔══════════════════════════════════════════════════════════════╗
+║              OUTLINER AI - QUICK START GUIDE                 ║
+╚══════════════════════════════════════════════════════════════╝
+
+📦 INSTALLATION (2 Minutes)
+─────────────────────────────────────────────────────────────────
+1. Open Chrome → chrome://extensions/
+2. Enable "Developer mode" (top right)
+3. Click "Load unpacked" 
+4. Select this folder (chrome-extension-package)
+5. Done! Icon appears in toolbar
+
+
+🔑 GET API KEY (3 Minutes)
+─────────────────────────────────────────────────────────────────
+1. Visit: https://aistudio.google.com/app/apikey
+2. Sign in with Google account
+3. Click "Create API Key"
+4. Copy the key (starts with AIza...)
+
+
+⚙️ CONFIGURE EXTENSION
+─────────────────────────────────────────────────────────────────
+1. Click Outliner AI icon in toolbar
+2. Click "⚙️ Settings" at bottom
+3. Paste your API key
+4. Click "Save Key"
+5. Settings will auto-collapse
+
+
+🚀 USAGE
+─────────────────────────────────────────────────────────────────
+1. Go to any article/blog/news page
+2. Click Outliner AI icon
+3. Choose a mode:
+   ⚡ BRIEF       → 2-3 sentences
+   📝 BULLET      → 5-7 key points
+   📋 COMPREHENSIVE → 5-7 paragraphs
+4. Click "Summarize This Page"
+5. Wait 3-10 seconds
+6. Read your summary!
+
+
+💡 TIPS
+─────────────────────────────────────────────────────────────────
+• Use Brief for quick news scanning
+• Use Bullet for note-taking
+• Use Comprehensive for research
+• Click Copy button to save summary
+• Works best on articles, blogs, news, documentation
+
+
+⚠️ TROUBLESHOOTING
+─────────────────────────────────────────────────────────────────
+"API key not configured"
+  → Go to Settings and add your API key
+
+"Content too short"
+  → Page needs at least 100 words
+
+"API quota exceeded"
+  → Wait a few minutes (free tier limit)
+
+Extension icon missing
+  → Go to chrome://extensions/ and enable it
+
+
+📁 TEST FILES
+─────────────────────────────────────────────────────────────────
+• test-article.html (in parent folder)
+  Sample article about AI to test all modes
+
+
+🔒 PRIVACY
+─────────────────────────────────────────────────────────────────
+✓ API key encrypted by Chrome
+✓ No tracking
+✓ No data collection
+✓ Only talks to Google Gemini API
+✓ All processing is secure
+
+
+📊 FREE TIER LIMITS
+─────────────────────────────────────────────────────────────────
+• 60 requests per minute
+• 1,500 requests per day
+• Plenty for regular use!
+
+
+🌐 WORKS ON
+─────────────────────────────────────────────────────────────────
+✓ Chrome 88+
+✓ Microsoft Edge 88+
+✓ Brave, Opera, Vivaldi (Chromium-based)
+
+
+📞 SUPPORT
+─────────────────────────────────────────────────────────────────
+• Check README.md for detailed docs
+• Check SETUP_GUIDE.md for testing
+• Report issues on GitHub
+
+
+═══════════════════════════════════════════════════════════════
+          Made with ❤️ using Google Gemini AI
+═══════════════════════════════════════════════════════════════

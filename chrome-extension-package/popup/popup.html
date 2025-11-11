@@ -1,0 +1,368 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Outliner AI</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      /* Use a clear, modern sans-serif stack for all UI text */
+      body {
+        width: 420px;
+        min-height: 500px;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: #fff;
+        color: #333;
+      }
+      .header {
+        background: linear-gradient(135deg, #ff6347 0%, #ff4500 100%);
+        padding: 24px 20px;
+        text-align: center;
+        color: white;
+      }
+      .header h1 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .header p {
+        font-size: 14px;
+        opacity: 0.95;
+      }
+      .content {
+        padding: 20px;
+      }
+      .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #333;
+      }
+      .mode-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .mode-btn {
+        padding: 14px 16px;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+        font-size: 15px;
+        font-weight: 600;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+      .mode-btn strong {
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        font-weight: 700;
+      }
+      .mode-btn:hover {
+        border-color: #ff6347;
+        background: #fff6f4;
+      }
+      .mode-btn.active {
+        border-color: #ff6347;
+        background: #fff6f4;
+        box-shadow: 0 2px 8px rgba(255, 99, 71, 0.12);
+      }
+      .action-btn {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #ff6347 0%, #ff4500 100%);
+        color: white;
+        border: none;
+        border-radius: 999px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .action-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 99, 71, 0.28);
+      }
+      /* Summarize button specific styling (navy blue) */
+      #summarizeBtn {
+        background: #001f3f;
+        background-image: none;
+      }
+      #summarizeBtn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(0, 31, 63, 0.35);
+      }
+      .action-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .loader {
+        display: none;
+        text-align: center;
+        padding: 30px 20px;
+        margin: 20px 0;
+        background: #f8f9fa;
+        border-radius: 18px;
+      }
+      .loader.show {
+        display: block;
+      }
+      .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #ff6347;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .loader-text {
+        font-size: 14px;
+        color: #666;
+        font-weight: 600;
+      }
+      .result-area {
+        display: none;
+        margin-top: 20px;
+        padding: 16px;
+        background: #f8f9fa;
+        border-radius: 18px;
+        border: 1px solid #e0e0e0;
+      }
+      .result-area.show {
+        display: block;
+      }
+      .result-content {
+        line-height: 1.6;
+        color: #333;
+        font-size: 14px;
+        margin-bottom: 12px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .result-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .secondary-btn {
+        flex: 1;
+        padding: 10px 14px;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .secondary-btn:hover {
+        background: #fff6f4;
+        border-color: #ff6347;
+      }
+      .settings-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+      }
+      .settings-btn {
+        width: 100%;
+        padding: 12px;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        transition: all 0.2s;
+      }
+      .settings-btn:hover {
+        background: #f8f9fa;
+        border-color: #667eea;
+      }
+      .api-settings {
+        display: none;
+        margin-top: 12px;
+        padding: 16px;
+        background: #f8f9fa;
+        border-radius: 18px;
+        border: 1px solid #e0e0e0;
+      }
+      .api-settings.show {
+        display: block;
+      }
+      .api-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 13px;
+        margin-bottom: 10px;
+      }
+      .api-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #2f855a;
+        margin-bottom: 10px;
+      }
+      .api-status .tick {
+        width: 18px;
+        height: 18px;
+        background: #2f855a;
+        color: white;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+      }
+      .remove-btn {
+        display: none;
+        width: 100%;
+        padding: 10px;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        color: #c53030;
+      }
+      .remove-btn:hover {
+        background: #fff6f6;
+        border-color: #f56565;
+      }
+      .api-input:focus {
+        outline: none;
+        border-color: #ff6347;
+      }
+      .api-guide {
+        font-size: 12px;
+        color: #666;
+        line-height: 1.4;
+        margin-top: 10px;
+      }
+      .api-guide a {
+        color: #667eea;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Outliner AI</h1>
+      <p>Intelligent Webpage Summarizer</p>
+    </div>
+    <div class="content">
+      <h3 class="section-title">Summary Mode</h3>
+      <div class="mode-buttons">
+        <button class="mode-btn active" data-mode="brief">
+          ⚡ <strong>Brief</strong> - Quick 2-3 sentence overview
+        </button>
+        <button class="mode-btn" data-mode="bullets">
+          📝 <strong>Bullet</strong> - 5-7 key points
+        </button>
+        <button class="mode-btn" data-mode="detailed">
+          📋 <strong>Comprehensive</strong> - Detailed 5-7 paragraphs
+        </button>
+      </div>
+      <button class="action-btn" id="summarizeBtn">Summarize This Page</button>
+      <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <div class="loader-text" id="loaderText">Extracting content...</div>
+      </div>
+      <div class="result-area" id="resultArea">
+        <div class="result-content" id="resultContent"></div>
+        <div class="result-actions">
+          <button class="secondary-btn" id="copyBtn">Copy</button>
+          <button class="secondary-btn" id="resetBtn">Start Over</button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <button class="settings-btn" id="settingsBtn">
+          Set up your API key
+        </button>
+        <div class="api-settings" id="apiSettings">
+          <div
+            class="api-header"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              margin-bottom: 8px;
+            "
+          >
+            <label style="font-size: 13px; font-weight: 600; margin: 0"
+              >Gemini API Key</label
+            >
+            <div
+              id="apiStatus"
+              class="api-status"
+              style="display: none; margin-bottom: 0"
+            ></div>
+          </div>
+          <div
+            class="api-row"
+            style="
+              display: flex;
+              gap: 10px;
+              align-items: center;
+              margin-bottom: 10px;
+            "
+          >
+            <input
+              type="password"
+              class="api-input"
+              id="apiKeyInput"
+              placeholder="Enter your API key (AIza...)"
+              style="flex: 1"
+            />
+          </div>
+          <div id="apiKeyRow">
+            <button
+              class="action-btn"
+              id="saveApiBtn"
+              style="font-size: 14px; padding: 10px"
+            >
+              Save Key
+            </button>
+            <button
+              class="remove-btn"
+              id="removeApiBtn"
+              style="font-size: 14px; padding: 10px"
+            >
+              Remove Key
+            </button>
+          </div>
+          <div class="api-guide">
+            Get a free API key from
+            <a href="https://aistudio.google.com/app/apikey" target="_blank"
+              >Google AI Studio</a
+            >
+            for enhanced AI summarization.
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

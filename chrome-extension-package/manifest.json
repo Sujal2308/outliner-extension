@@ -4,13 +4,13 @@
   "version": "1.0.0",
   "description": "Summarize any webpage content in brief, detailed, or bullet point formats using AI",
 
-  "permissions": ["activeTab", "storage"],
+  "permissions": ["activeTab", "storage", "scripting"],
 
   "host_permissions": ["http://*/*", "https://*/*"],
 
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "Summarize Page with AI",
+    "default_title": "Summarize Page",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",

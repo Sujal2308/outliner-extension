@@ -1,0 +1,22 @@
+🔧 RELOAD YOUR EXTENSION NOW!
+
+The CSS issue is fixed! Here's what to do:
+
+1. Go to: chrome://extensions/
+2. Find "Outliner AI - Webpage Summarizer"
+3. Click the RELOAD button (🔄 circular arrow icon)
+4. Click the extension icon in your toolbar
+
+The beautiful UI should now appear properly! 🎨
+
+The issue was that popup.html was trying to load "popup-functional.js" 
+but the file is actually named "popup.js". This is now fixed.
+
+✅ What you should see now:
+- Purple/blue gradient header
+- "Outliner AI" title
+- Three mode buttons (Brief, Detailed, Bullets)
+- "Summarize Page" button
+- Beautiful modern design
+
+If you still see CSS text, press Ctrl+Shift+R to hard refresh!

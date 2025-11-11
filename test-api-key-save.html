@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test API Key Save</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+      .test-section {
+        background: #f5f5f5;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: monospace;
+      }
+      button {
+        background: #4285f4;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #357ae8;
+      }
+      .result {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 4px;
+        font-family: monospace;
+      }
+      .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔑 API Key Save Test</h1>
+
+    <div class="test-section">
+      <h3>Test Your API Key</h3>
+      <input
+        type="text"
+        id="apiKeyInput"
+        placeholder="Paste your API key here..."
+        value="AIzaSyDfv3Xgc7b99FJ5FM-LGECugvyRSZ5J9EA"
+      />
+
+      <div style="margin-top: 15px">
+        <button onclick="validateKey()">1. Validate Format</button>
+        <button onclick="saveKey()">2. Save to Storage</button>
+        <button onclick="checkStorage()">3. Check Stored Key</button>
+        <button onclick="testGeminiAPI()">4. Test API Call</button>
+        <button onclick="clearKey()">Clear Storage</button>
+      </div>
+
+      <div id="result"></div>
+    </div>
+
+    <div class="test-section">
+      <h3>Console Logs</h3>
+      <div
+        id="console"
+        style="
+          max-height: 300px;
+          overflow-y: auto;
+          background: white;
+          padding: 10px;
+          border-radius: 4px;
+        "
+      ></div>
+    </div>
+
+    <script>
+      function log(message, type = "info") {
+        const consoleDiv = document.getElementById("console");
+        const time = new Date().toLocaleTimeString();
+        consoleDiv.innerHTML += `<div style="color: ${
+          type === "error" ? "red" : type === "success" ? "green" : "black"
+        };">[${time}] ${message}</div>`;
+        consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        console.log(message);
+      }
+
+      function showResult(message, isSuccess) {
+        const resultDiv = document.getElementById("result");
+        resultDiv.className = `result ${isSuccess ? "success" : "error"}`;
+        resultDiv.innerHTML = message;
+      }
+
+      function validateKey() {
+        const apiKey = document.getElementById("apiKeyInput").value.trim();
+
+        log("Validating API key...", "info");
+        log(`Key length: ${apiKey.length}`, "info");
+        log(`Starts with "AIza": ${apiKey.startsWith("AIza")}`, "info");
+        log(`Full key: ${apiKey}`, "info");
+
+        if (!apiKey) {
+          showResult("❌ API key is empty", false);
+          log("Validation failed: empty key", "error");
+          return false;
+        }
+
+        if (!apiKey.startsWith("AIza")) {
+          showResult('❌ API key must start with "AIza"', false);
+          log("Validation failed: wrong prefix", "error");
+          return false;
+        }
+
+        if (apiKey.length < 30) {
+          showResult(
+            `❌ API key too short (${apiKey.length} chars, need 30+)`,
+            false
+          );
+          log(
+            `Validation failed: key too short (${apiKey.length} chars)`,
+            "error"
+          );
+          return false;
+        }
+
+        showResult(
+          `✅ API key format is valid! (${apiKey.length} characters)`,
+          true
+        );
+        log("Validation passed!", "success");
+        return true;
+      }
+
+      async function saveKey() {
+        if (!validateKey()) {
+          return;
+        }
+
+        const apiKey = document.getElementById("apiKeyInput").value.trim();
+
+        try {
+          log("Attempting to save key to chrome.storage.sync...", "info");
+
+          await chrome.storage.sync.set({ geminiApiKey: apiKey });
+
+          log("Key saved successfully!", "success");
+          showResult("✅ API key saved to chrome.storage.sync", true);
+
+          // Also notify background script
+          chrome.runtime.sendMessage(
+            {
+              action: "saveApiKey",
+              apiKey: apiKey,
+            },
+            (response) => {
+              if (response && response.success) {
+                log("Background script confirmed save", "success");
+              } else {
+                log(
+                  "Background script error: " + (response?.error || "unknown"),
+                  "error"
+                );
+              }
+            }
+          );
+        } catch (error) {
+          log(`Save failed: ${error.message}`, "error");
+          showResult(`❌ Failed to save: ${error.message}`, false);
+        }
+      }
+
+      async function checkStorage() {
+        try {
+          log("Checking chrome.storage.sync...", "info");
+
+          const result = await chrome.storage.sync.get("geminiApiKey");
+
+          if (result.geminiApiKey) {
+            const stored = result.geminiApiKey;
+            log(`Found stored key: ${stored}`, "success");
+            log(`Stored key length: ${stored.length}`, "info");
+            showResult(
+              `✅ API key found in storage!\n\nKey: ${stored}\nLength: ${stored.length}`,
+              true
+            );
+          } else {
+            log("No API key found in storage", "error");
+            showResult("❌ No API key found in storage", false);
+          }
+
+          // Also check with background script
+          chrome.runtime.sendMessage(
+            {
+              action: "getApiKeyStatus",
+            },
+            (response) => {
+              if (response && response.success) {
+                log(
+                  `Background script hasApiKey: ${response.hasApiKey}`,
+                  response.hasApiKey ? "success" : "error"
+                );
+              }
+            }
+          );
+        } catch (error) {
+          log(`Check failed: ${error.message}`, "error");
+          showResult(`❌ Failed to check: ${error.message}`, false);
+        }
+      }
+
+      async function testGeminiAPI() {
+        const apiKey = document.getElementById("apiKeyInput").value.trim();
+
+        if (!validateKey()) {
+          return;
+        }
+
+        try {
+          log("Testing Gemini API call...", "info");
+          showResult("🔄 Testing API connection...", true);
+
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    {
+                      text: "Say 'API working!' in exactly 2 words.",
+                    },
+                  ],
+                },
+              ],
+              generationConfig: {
+                temperature: 0.3,
+                maxOutputTokens: 20,
+              },
+            }),
+          });
+
+          log(
+            `API Response status: ${response.status}`,
+            response.ok ? "success" : "error"
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            const text = data.candidates[0].content.parts[0].text;
+            log(`API Response: ${text}`, "success");
+            showResult(`✅ API Key is WORKING!\n\nResponse: ${text}`, true);
+          } else {
+            const errorText = await response.text();
+            log(`API Error: ${errorText}`, "error");
+            showResult(
+              `❌ API Error (${response.status})\n\n${errorText}`,
+              false
+            );
+          }
+        } catch (error) {
+          log(`API test failed: ${error.message}`, "error");
+          showResult(`❌ API test failed: ${error.message}`, false);
+        }
+      }
+
+      async function clearKey() {
+        try {
+          await chrome.storage.sync.remove("geminiApiKey");
+          log("Storage cleared", "success");
+          showResult("✅ API key removed from storage", true);
+
+          // Also notify background script
+          chrome.runtime.sendMessage({
+            action: "saveApiKey",
+            apiKey: "",
+          });
+        } catch (error) {
+          log(`Clear failed: ${error.message}`, "error");
+          showResult(`❌ Failed to clear: ${error.message}`, false);
+        }
+      }
+
+      // Auto-run validation on load
+      window.onload = () => {
+        log("Test page loaded", "info");
+        log("Click buttons above to test your API key", "info");
+      };
+    </script>
+  </body>
+</html>
