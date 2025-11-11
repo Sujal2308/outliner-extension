@@ -705,6 +705,18 @@
         background: var(--button-hover);
       }
 
+      /* Dark-mode: make the settings button grey for contrast */
+      [data-theme="dark"] .settings-btn {
+        background: #4b5563; /* gray-600 */
+        color: #ffffff;
+        border-color: #6b7280;
+      }
+
+      [data-theme="dark"] .settings-btn:hover {
+        background: #545b66;
+        border-color: #6b7280;
+      }
+
       .api-key-section {
         background: var(--bg-secondary);
         padding: 15px;

@@ -380,6 +380,20 @@ class PopupController {
     }
 
     this.resultContent.innerHTML = formattedSummary.replace(/\n/g, "<br>");
+    // Remove any previous Try Again button (from earlier errors)
+    const existingTry = document.getElementById("tryAgainBtn");
+    if (existingTry) existingTry.remove();
+
+    // Ensure primary action buttons are visible for successful results
+    if (this.copyBtn) {
+      this.copyBtn.style.display = "inline-flex";
+      // Reset label if it was changed to 'Copied!'
+      this.copyBtn.textContent = this.copyBtn.textContent.includes("Copied")
+        ? " Copy"
+        : this.copyBtn.textContent.trim() || " Copy";
+    }
+    if (this.resetBtn) this.resetBtn.style.display = "inline-flex";
+
     this.resultArea.classList.add("show");
     this.currentSummary = formattedSummary;
     // Update status with mode info
@@ -398,6 +412,44 @@ class PopupController {
   showError(message) {
     this.resultContent.innerHTML = `<div style="color: #dc3545; font-weight: 600;"> Error:</div><div style="margin-top: 8px;">${message}</div>`;
     this.resultArea.classList.add("show");
+
+    // Manage action buttons for this error specifically
+    const actions = this.resultArea.querySelector(".result-actions");
+    // Hide default action buttons by default
+    if (this.copyBtn) this.copyBtn.style.display = "none";
+    if (this.resetBtn) this.resetBtn.style.display = "none";
+
+    // If this is the specific "Receiving end does not exist" connection error,
+    // replace actions with a single Try Again button that retries the summarize flow.
+    const connectionErrorText = "Receiving end does not exist";
+    if (message && message.includes(connectionErrorText)) {
+      // remove any existing tryAgain button first
+      const existing = document.getElementById("tryAgainBtn");
+      if (existing) existing.remove();
+
+      const tryBtn = document.createElement("button");
+      tryBtn.id = "tryAgainBtn";
+      tryBtn.className = "secondary-btn";
+      tryBtn.textContent = "Try Again";
+      tryBtn.addEventListener("click", async () => {
+        // hide result and retry
+        this.resultArea.classList.remove("show");
+        // small delay to allow UI to hide
+        setTimeout(() => this.summarize(), 120);
+      });
+
+      if (actions) actions.appendChild(tryBtn);
+      // focus the try button for quick retry
+      tryBtn.focus();
+    } else {
+      // For other errors, show the normal action buttons (Copy / Start Over)
+      if (this.copyBtn) this.copyBtn.style.display = "inline-flex";
+      if (this.resetBtn) this.resetBtn.style.display = "inline-flex";
+      // remove tryAgain if present
+      const existing = document.getElementById("tryAgainBtn");
+      if (existing) existing.remove();
+    }
+
     this.updateStatus(`Error: ${message}`, 6000, "error");
   }
 

@@ -73,6 +73,16 @@
         flex-direction: column;
         align-items: flex-start;
       }
+      .header-title-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .header-logo {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+      }
       .header-right {
         display: flex;
         align-items: center;
@@ -241,12 +251,20 @@
       }
       /* Summarize button specific styling (navy blue) */
       #summarizeBtn {
-        background: #001f3f;
-        background-image: none;
+        background: linear-gradient(135deg, #1e3a8a 0%, #17408f 100%);
+        color: #ffffff;
       }
       #summarizeBtn:hover {
         transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(0, 31, 63, 0.35);
+        box-shadow: 0 6px 18px rgba(30, 58, 138, 0.28);
+      }
+      /* Ensure Summarize button stays navy in dark mode too */
+      body.dark #summarizeBtn {
+        background: linear-gradient(135deg, #1e3a8a 0%, #17408f 100%);
+        color: #fff;
+      }
+      body.dark #summarizeBtn:hover {
+        box-shadow: 0 6px 18px rgba(30, 58, 138, 0.24);
       }
       .action-btn:disabled {
         opacity: 0.6;
@@ -394,17 +412,17 @@
         border-color: var(--settings-btn-border-hover);
       }
 
-      /* Neutralize hover effect in dark mode for settings button */
+      /* Make the "Set up your API key" button grey in dark mode for better contrast */
       body.dark .settings-btn {
-        background: var(--card-bg);
-        color: var(--text-color);
-        border-color: var(--border);
+        /* slate gray background */
+        background: #4b5563; /* gray-600 */
+        color: #e6eef8; /* light text for contrast */
+        border-color: #6b7280; /* slightly lighter border */
       }
 
       body.dark .settings-btn:hover {
-        /* keep hover identical to normal state in dark mode to avoid dark-grey blot */
-        background: var(--card-bg);
-        border-color: var(--border);
+        background: #545b66; /* slightly lighter on hover */
+        border-color: #6b7280;
       }
       /* Animated collapse for API settings */
       .api-settings {
@@ -529,7 +547,14 @@
   <body>
     <div class="header">
       <div class="header-left">
-        <h1>Outliner AI</h1>
+        <div class="header-title-row">
+          <img
+            src="../icons/outliner.png"
+            alt="Outliner AI"
+            class="header-logo"
+          />
+          <h1>Outliner AI</h1>
+        </div>
         <p>Intelligent Webpage Summarizer</p>
       </div>
       <div class="header-right">
