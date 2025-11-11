@@ -24,23 +24,29 @@ class BackgroundService {
     this.t5Summarizer =
       typeof T5Summarizer !== "undefined" ? new T5Summarizer() : null;
     this.localSummarizer = new TextSummarizer();
-    this.setupMessageListener();
-    this.setupInstallListener();
 
     // API configuration (using v1beta with gemini-2.0-flash - fast and efficient)
     this.GEMINI_API_URL =
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
     this.apiKey = null;
-    this.loadApiKey();
+    this.apiKeyLoaded = false;
+
+    // Load API key first, then setup listeners
+    this.loadApiKey().then(() => {
+      this.setupMessageListener();
+      this.setupInstallListener();
+    });
   }
 
   async loadApiKey() {
     try {
       const result = await chrome.storage.sync.get("geminiApiKey");
       this.apiKey = result.geminiApiKey;
+      this.apiKeyLoaded = true;
       console.log("API key loaded:", this.apiKey ? "✓ Present" : "✗ Missing");
     } catch (error) {
       console.error("Failed to load API key:", error);
+      this.apiKeyLoaded = true; // Mark as loaded even on error to prevent blocking
     }
   }
 
@@ -50,15 +56,23 @@ class BackgroundService {
         // Remove the API key if empty
         await chrome.storage.sync.remove("geminiApiKey");
         this.apiKey = null;
-        console.log("API key removed successfully");
+        console.log("✓ API key removed successfully");
+        return { success: true, message: "API key removed" };
       } else {
+        // Validate API key format
+        const trimmedKey = apiKey.trim();
+        if (!trimmedKey.startsWith("AIza")) {
+          throw new Error("Invalid API key format");
+        }
+
         // Save the API key
-        await chrome.storage.sync.set({ geminiApiKey: apiKey.trim() });
-        this.apiKey = apiKey.trim();
-        console.log("API key saved successfully");
+        await chrome.storage.sync.set({ geminiApiKey: trimmedKey });
+        this.apiKey = trimmedKey;
+        console.log("✓ API key saved successfully to background service");
+        return { success: true, message: "API key saved" };
       }
     } catch (error) {
-      console.error("Failed to save API key:", error);
+      console.error("✗ Failed to save API key in background:", error);
       throw error;
     }
   }
@@ -121,6 +135,12 @@ class BackgroundService {
     const startTime = Date.now();
 
     try {
+      // Ensure API key is loaded before processing
+      if (!this.apiKeyLoaded) {
+        console.log("Waiting for API key to load...");
+        await this.loadApiKey();
+      }
+
       const { content, title, mode, wordCount } = data;
 
       // Validate input
