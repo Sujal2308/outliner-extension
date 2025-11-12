@@ -21,9 +21,12 @@ class PopupController {
     this.contentEl = document.querySelector(".content");
     this.saveApiBtn = document.getElementById("saveApiBtn");
     this.removeApiBtn = document.getElementById("removeApiBtn");
+    this.editApiBtn = document.getElementById("editApiBtn");
     this.apiStatus = document.getElementById("apiStatus");
     this.miniToast = document.getElementById("miniToast");
     this.statusText = document.getElementById("statusText");
+    this.thumbsUpBtn = document.getElementById("thumbsUpBtn");
+    this.thumbsDownBtn = document.getElementById("thumbsDownBtn");
     this._statusTimeout = null;
 
     // Attach event listeners
@@ -51,7 +54,10 @@ class PopupController {
     this.resetBtn.addEventListener("click", () => this.reset());
 
     // Settings toggle
-    this.settingsBtn.addEventListener("click", () => this.toggleSettings());
+    this.settingsBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      this.toggleSettings();
+    });
 
     // Make the Summary Mode heading clickable to jump to the summary area
     try {
@@ -89,12 +95,32 @@ class PopupController {
     this.saveApiBtn.addEventListener("click", () => this.saveApiKey());
     if (this.removeApiBtn)
       this.removeApiBtn.addEventListener("click", () => this.removeApiKey());
+    if (this.editApiBtn)
+      this.editApiBtn.addEventListener("click", () => this.enableEditApiKey());
+
+    // Feedback buttons
+    if (this.thumbsUpBtn)
+      this.thumbsUpBtn.addEventListener("click", () =>
+        this.handleFeedback("up")
+      );
+    if (this.thumbsDownBtn)
+      this.thumbsDownBtn.addEventListener("click", () =>
+        this.handleFeedback("down")
+      );
   }
 
   selectMode(button) {
     this.modeButtons.forEach((btn) => btn.classList.remove("active"));
     button.classList.add("active");
     this.selectedMode = button.dataset.mode;
+
+    // Re-enable summarize button when mode is changed
+    if (this.summarizeBtn) {
+      this.summarizeBtn.disabled = false;
+      this.summarizeBtn.style.opacity = "1";
+      this.summarizeBtn.style.cursor = "pointer";
+    }
+
     // Human-friendly label
     const modeLabel =
       {
@@ -170,35 +196,130 @@ class PopupController {
         );
       }
 
-      // Small delay to ensure script is loaded
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Longer delay to ensure script is fully loaded and initialized
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Increased from 500ms to 1 second
 
-      // Try to use content script first
+      // Try to use content script first with retry logic
       let content, title;
-      try {
-        const response = await chrome.tabs.sendMessage(tab.id, {
-          action: "extractContent",
-        });
+      const MAX_RETRIES = 5; // Increased retries
+      const PING_TIMEOUT = 3000; // Increased to 3 seconds for more stable connections
 
-        if (response && response.success) {
-          content = response.data.content;
-          title = response.data.title;
-          console.log("Content extracted via content script");
-        } else {
-          throw new Error("Content script response failed");
-        }
-      } catch (contentScriptError) {
-        console.warn(
-          "Content script failed, using inline extraction:",
-          contentScriptError.message
-        );
-        // Fallback: Extract content directly using executeScript
-        const [result] = await chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          func: () => {
-            // Extract main content from page, excluding ads and navigation
-            const getMainContent = () => {
-              // Remove ads, navigation, and other clutter before extraction
+      for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        try {
+          // First, verify content script is responsive with a ping
+          let pingSucceeded = false;
+          try {
+            await Promise.race([
+              new Promise((resolve) => {
+                chrome.tabs.sendMessage(
+                  tab.id,
+                  { action: "ping" },
+                  (response) => {
+                    if (chrome.runtime.lastError) {
+                      console.warn(
+                        "Ping error:",
+                        chrome.runtime.lastError.message
+                      );
+                    } else if (response && response.ready) {
+                      pingSucceeded = true;
+                    }
+                    resolve();
+                  }
+                );
+              }),
+              new Promise((resolve) => setTimeout(resolve, PING_TIMEOUT)),
+            ]);
+          } catch (pingError) {
+            console.log("Ping check failed:", pingError.message);
+          }
+
+          // If ping failed, try to inject content script
+          if (!pingSucceeded) {
+            console.log(
+              `Ping failed on attempt ${attempt}, injecting content script...`
+            );
+            try {
+              await chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                files: ["content/content.js"],
+              });
+              // Give content script a moment to initialize
+              await new Promise((resolve) => setTimeout(resolve, 800)); // Increased from 200ms to 800ms
+
+              // Try ping again after injection
+              try {
+                await Promise.race([
+                  new Promise((resolve) => {
+                    chrome.tabs.sendMessage(
+                      tab.id,
+                      { action: "ping" },
+                      (response) => {
+                        if (
+                          !chrome.runtime.lastError &&
+                          response &&
+                          response.ready
+                        ) {
+                          pingSucceeded = true;
+                        }
+                        resolve();
+                      }
+                    );
+                  }),
+                  new Promise((resolve) => setTimeout(resolve, 2000)), // Increased from 800ms to 2 seconds
+                ]);
+              } catch (e) {
+                console.log("Second ping after injection failed:", e.message);
+              }
+            } catch (injectionError) {
+              console.log(
+                "Content script injection failed:",
+                injectionError.message
+              );
+            }
+          }
+
+          if (!pingSucceeded && attempt < MAX_RETRIES) {
+            console.log(
+              `Content script not ready, retrying... (attempt ${attempt}/${MAX_RETRIES})`
+            );
+            // Progressive delay: faster first retries, longer later ones
+            const delay = attempt === 1 ? 200 : attempt === 2 ? 300 : 500;
+            await new Promise((resolve) => setTimeout(resolve, delay));
+            continue;
+          }
+
+          // Now try to extract content
+          const response = await chrome.tabs.sendMessage(tab.id, {
+            action: "extractContent",
+          });
+
+          if (response && response.success) {
+            content = response.data.content;
+            title = response.data.title;
+            console.log(
+              "Content extracted via content script (attempt " + attempt + ")"
+            );
+            break;
+          } else {
+            throw new Error("Content script response failed");
+          }
+        } catch (contentScriptError) {
+          console.warn(
+            `Content script attempt ${attempt}/${MAX_RETRIES} failed:`,
+            contentScriptError.message
+          );
+
+          if (attempt < MAX_RETRIES) {
+            // Retry with delay
+            await new Promise((resolve) => setTimeout(resolve, 300));
+            continue;
+          }
+
+          // Last attempt failed - use inline extraction fallback
+          console.log("Using inline extraction fallback...");
+          const [result] = await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: () => {
               const excludeSelectors = [
                 "aside",
                 "nav",
@@ -232,7 +353,6 @@ class PopupController {
                 ".comment-section",
               ];
 
-              // Priority selectors for main content
               const contentSelectors = [
                 "article",
                 "main",
@@ -248,7 +368,6 @@ class PopupController {
                 ".article-body",
               ];
 
-              // Find the main content container
               let mainElement = null;
               for (const selector of contentSelectors) {
                 const element = document.querySelector(selector);
@@ -258,22 +377,17 @@ class PopupController {
                 }
               }
 
-              // Fallback to body if no main content found
               if (!mainElement) {
                 mainElement = document.body;
               }
 
-              // Clone the element to avoid modifying the actual page
               const clonedElement = mainElement.cloneNode(true);
-
-              // Remove all unwanted elements from the clone
               excludeSelectors.forEach((selector) => {
                 const elementsToRemove =
                   clonedElement.querySelectorAll(selector);
                 elementsToRemove.forEach((el) => el.remove());
               });
 
-              // Extract clean text content
               const content = clonedElement.textContent
                 .replace(/\s+/g, " ")
                 .replace(/[\r\n]+/g, " ")
@@ -283,18 +397,17 @@ class PopupController {
                 content: content.substring(0, 30000),
                 title: document.title,
               };
-            };
+            },
+          });
 
-            return getMainContent();
-          },
-        });
+          if (!result || !result.result) {
+            throw new Error("Failed to extract content from page");
+          }
 
-        if (!result || !result.result) {
-          throw new Error("Failed to extract content from page");
+          content = result.result.content;
+          title = result.result.title;
+          break;
         }
-
-        content = result.result.content;
-        title = result.result.title;
       }
 
       if (!content || content.length < 100) {
@@ -387,12 +500,17 @@ class PopupController {
     // Ensure primary action buttons are visible for successful results
     if (this.copyBtn) {
       this.copyBtn.style.display = "inline-flex";
-      // Reset label if it was changed to 'Copied!'
-      this.copyBtn.textContent = this.copyBtn.textContent.includes("Copied")
-        ? " Copy"
-        : this.copyBtn.textContent.trim() || " Copy";
     }
     if (this.resetBtn) this.resetBtn.style.display = "inline-flex";
+    if (this.thumbsUpBtn) this.thumbsUpBtn.style.display = "inline-flex";
+    if (this.thumbsDownBtn) this.thumbsDownBtn.style.display = "inline-flex";
+
+    // Disable summarize button after successful result
+    if (this.summarizeBtn) {
+      this.summarizeBtn.disabled = true;
+      this.summarizeBtn.style.opacity = "0.5";
+      this.summarizeBtn.style.cursor = "not-allowed";
+    }
 
     this.resultArea.classList.add("show");
     this.currentSummary = formattedSummary;
@@ -414,13 +532,14 @@ class PopupController {
     this.resultArea.classList.add("show");
 
     // Manage action buttons for this error specifically
-    const actions = this.resultArea.querySelector(".result-actions");
     // Hide default action buttons by default
     if (this.copyBtn) this.copyBtn.style.display = "none";
     if (this.resetBtn) this.resetBtn.style.display = "none";
+    if (this.thumbsUpBtn) this.thumbsUpBtn.style.display = "none";
+    if (this.thumbsDownBtn) this.thumbsDownBtn.style.display = "none";
 
     // If this is the specific "Receiving end does not exist" connection error,
-    // replace actions with a single Try Again button that retries the summarize flow.
+    // show only a single Try Again button that retries the summarize flow.
     const connectionErrorText = "Receiving end does not exist";
     if (message && message.includes(connectionErrorText)) {
       // remove any existing tryAgain button first
@@ -431,6 +550,10 @@ class PopupController {
       tryBtn.id = "tryAgainBtn";
       tryBtn.className = "secondary-btn";
       tryBtn.textContent = "Try Again";
+      tryBtn.style.marginTop = "12px";
+      tryBtn.style.display = "block";
+      tryBtn.style.margin = "12px auto 0 auto";
+      tryBtn.style.width = "fit-content";
       tryBtn.addEventListener("click", async () => {
         // hide result and retry
         this.resultArea.classList.remove("show");
@@ -438,13 +561,17 @@ class PopupController {
         setTimeout(() => this.summarize(), 120);
       });
 
-      if (actions) actions.appendChild(tryBtn);
+      // Add Try Again button to result-footer instead of hidden result-actions
+      const resultFooter = this.resultArea.querySelector(".result-footer");
+      if (resultFooter) resultFooter.appendChild(tryBtn);
       // focus the try button for quick retry
       tryBtn.focus();
     } else {
       // For other errors, show the normal action buttons (Copy / Start Over)
       if (this.copyBtn) this.copyBtn.style.display = "inline-flex";
       if (this.resetBtn) this.resetBtn.style.display = "inline-flex";
+      if (this.thumbsUpBtn) this.thumbsUpBtn.style.display = "inline-flex";
+      if (this.thumbsDownBtn) this.thumbsDownBtn.style.display = "inline-flex";
       // remove tryAgain if present
       const existing = document.getElementById("tryAgainBtn");
       if (existing) existing.remove();
@@ -484,10 +611,17 @@ class PopupController {
   copyToClipboard() {
     if (this.currentSummary) {
       navigator.clipboard.writeText(this.currentSummary);
-      this.copyBtn.textContent = " Copied!";
+
+      // Show checkmark animation
+      this.copyBtn.classList.add("copied");
+
+      // Remove the class after animation
       setTimeout(() => {
-        this.copyBtn.textContent = " Copy";
-      }, 2000);
+        this.copyBtn.classList.remove("copied");
+      }, 800);
+
+      // Show toast feedback
+      this.showMiniToast("Copied!", 1800, "success");
     }
   }
 
@@ -495,11 +629,23 @@ class PopupController {
     this.resultArea.classList.remove("show");
     this.loader.classList.remove("show");
     this.currentSummary = null;
+
+    // Re-enable summarize button
+    if (this.summarizeBtn) {
+      this.summarizeBtn.disabled = false;
+      this.summarizeBtn.style.opacity = "1";
+      this.summarizeBtn.style.cursor = "pointer";
+    }
   }
 
   toggleSettings() {
     const opened = this.apiSettings.classList.toggle("show");
     if (opened) {
+      // Change link text to "Close ↑"
+      this.settingsBtn.textContent = "Close ↑";
+      this.settingsBtn.style.fontSize = "14px";
+      this.settingsBtn.style.fontWeight = "700";
+      this.settingsBtn.style.fontStyle = "normal";
       // focus the input and scroll it into view smoothly
       setTimeout(() => {
         try {
@@ -515,6 +661,11 @@ class PopupController {
       }, 80);
       this.updateStatus("Opened API settings", 1800);
     } else {
+      // Change link text back to original
+      this.settingsBtn.textContent = "Click here to setup";
+      this.settingsBtn.style.fontSize = "13px";
+      this.settingsBtn.style.fontWeight = "500";
+      this.settingsBtn.style.fontStyle = "italic";
       this.updateStatus("Closed API settings", 900);
     }
   }
@@ -635,6 +786,8 @@ class PopupController {
       await chrome.storage.sync.remove("geminiApiKey");
       await chrome.runtime.sendMessage({ action: "saveApiKey", apiKey: "" });
       this.apiKeyInput.value = "";
+      // Make input editable again
+      this.apiKeyInput.readOnly = false;
       this.showApiEmptyState();
     } catch (error) {
       console.error("Failed to remove API key:", error);
@@ -651,7 +804,13 @@ class PopupController {
       this.apiStatus.style.display = "flex";
       this.apiStatus.innerHTML = `<span class="tick">✓</span><span>API key saved</span>`;
     }
+    // Make input readonly and masked
+    if (this.apiKeyInput) {
+      this.apiKeyInput.readOnly = true;
+      this.apiKeyInput.type = "password";
+    }
     if (this.saveApiBtn) this.saveApiBtn.style.display = "none";
+    if (this.editApiBtn) this.editApiBtn.style.display = "inline-block";
     if (this.removeApiBtn) this.removeApiBtn.style.display = "inline-block";
   }
 
@@ -660,7 +819,13 @@ class PopupController {
       this.apiStatus.style.display = "none";
       this.apiStatus.innerHTML = "";
     }
+    // Make input editable for entering new key
+    if (this.apiKeyInput) {
+      this.apiKeyInput.readOnly = false;
+      this.apiKeyInput.type = "text";
+    }
     if (this.saveApiBtn) this.saveApiBtn.style.display = "inline-block";
+    if (this.editApiBtn) this.editApiBtn.style.display = "none";
     if (this.removeApiBtn) this.removeApiBtn.style.display = "none";
     // hide any toast if present
     if (this.miniToast) this.miniToast.classList.remove("show");
@@ -681,6 +846,53 @@ class PopupController {
         this.miniToast.classList.remove("error");
       }
     }, duration);
+  }
+
+  enableEditApiKey() {
+    // Allow editing of the saved API key
+    if (this.apiKeyInput) {
+      this.apiKeyInput.readOnly = false;
+      this.apiKeyInput.type = "text";
+      this.apiKeyInput.focus();
+      // Select existing value for convenience
+      try {
+        this.apiKeyInput.select();
+      } catch (e) {}
+    }
+    if (this.saveApiBtn) this.saveApiBtn.style.display = "inline-block";
+    if (this.editApiBtn) this.editApiBtn.style.display = "none";
+  }
+
+  handleFeedback(type) {
+    // Handle thumbs up/down feedback
+    const isUp = type === "up";
+    const upBtn = this.thumbsUpBtn;
+    const downBtn = this.thumbsDownBtn;
+
+    // Check if already active (will toggle off)
+    const wasActive = isUp
+      ? upBtn.classList.contains("active")
+      : downBtn.classList.contains("active");
+
+    // Toggle active state
+    if (isUp) {
+      upBtn.classList.toggle("active");
+      downBtn.classList.remove("active");
+    } else {
+      downBtn.classList.toggle("active");
+      upBtn.classList.remove("active");
+    }
+
+    // Show feedback message only when selecting (not deselecting)
+    if (!wasActive) {
+      const feedbackText = isUp
+        ? "👍 Thanks for the feedback!"
+        : "👎 We'll improve!";
+      this.showMiniToast(feedbackText, 1800, "success");
+    }
+
+    // Optional: Log feedback (could send to analytics)
+    console.log(`User feedback: ${type === "up" ? "Helpful" : "Not helpful"}`);
   }
 }
 

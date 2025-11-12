@@ -142,6 +142,25 @@
         max-height: calc(100vh - 110px);
         overflow-y: auto;
         scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: #999 transparent;
+      }
+      /* Sleek, thin grey scrollbar for Webkit browsers (outer scrollbar) */
+      .content::-webkit-scrollbar {
+        width: 4px;
+      }
+      .content::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .content::-webkit-scrollbar-thumb {
+        background: #999;
+        border-radius: 3px;
+      }
+      .content::-webkit-scrollbar-thumb:hover {
+        background: #666;
+      }
+      .content::-webkit-scrollbar-button {
+        display: none;
       }
       .section-title {
         font-size: 16px;
@@ -253,6 +272,15 @@
       #summarizeBtn {
         background: linear-gradient(135deg, #1e3a8a 0%, #17408f 100%);
         color: #ffffff;
+        border: 2px solid #1e3a8a;
+  border-radius: 5px;
+        padding: 12px 0;
+        min-width: 180px;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        box-shadow: none;
+        transition: box-shadow 0.2s, border-color 0.2s;
       }
       #summarizeBtn:hover {
         transform: translateY(-1px);
@@ -355,10 +383,140 @@
         margin-bottom: 12px;
         max-height: 300px;
         overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--accent1) transparent;
+      }
+      /* Sleek, thin tomato-colored scrollbar for Webkit browsers (result content) */
+      .result-content::-webkit-scrollbar {
+        width: 4px;
+      }
+      .result-content::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .result-content::-webkit-scrollbar-thumb {
+        background: var(--accent1);
+        border-radius: 3px;
+      }
+      .result-content::-webkit-scrollbar-thumb:hover {
+        background: var(--accent2);
+      }
+      .result-content::-webkit-scrollbar-button {
+        display: none;
       }
       .result-actions {
+        display: none;
+      }
+      .result-footer {
         display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+      }
+      .feedback-section {
+        display: flex;
+        align-items: center;
         gap: 8px;
+        justify-content: flex-start;
+      }
+      .feedback-label {
+        display: none;
+      }
+      .feedback-buttons {
+        display: flex;
+        gap: 4px;
+        justify-content: flex-start;
+      }
+      .feedback-btn {
+        background: none;
+        border: 1.5px solid var(--border);
+        border-radius: 6px;
+        cursor: pointer;
+        padding: 8px;
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        min-height: 36px;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-color);
+        position: relative;
+        font-size: 0;
+        line-height: 0;
+      }
+      .feedback-btn img {
+        width: 20px;
+        height: 20px;
+        filter: brightness(0) saturate(100%);
+        transition: filter 0.2s ease, opacity 0.2s ease;
+        display: block;
+        opacity: 0.7;
+      }
+      body.dark .feedback-btn img {
+        filter: brightness(0) saturate(100%) invert(100%);
+        opacity: 0.8;
+      }
+      .feedback-btn:hover {
+        background: color-mix(in srgb, var(--card-bg) 92%, var(--accent1) 8%);
+        border-color: var(--accent1);
+        transform: scale(1.08);
+      }
+      .feedback-btn.active {
+        background: rgba(var(--accent-rgba), 0.15);
+        border-color: var(--accent1);
+      }
+      .feedback-btn.active img {
+        filter: invert(47%) sepia(85%) saturate(1200%) hue-rotate(3deg);
+      }
+      body.dark .feedback-btn.active img {
+        filter: invert(65%) sepia(85%) saturate(1200%) hue-rotate(3deg);
+      }
+      body.dark .feedback-btn:hover {
+        background: color-mix(in srgb, var(--card-bg) 92%, var(--accent1) 8%);
+        border-color: var(--accent1);
+      }
+      body.dark .feedback-btn.active {
+        background: rgba(var(--accent-rgba), 0.15);
+        border-color: var(--accent1);
+      }
+      /* Hide icon when copied */
+      .feedback-btn.copied img {
+        opacity: 0 !important;
+        visibility: hidden;
+      }
+      body.dark .feedback-btn.copied img {
+        opacity: 0 !important;
+        visibility: hidden;
+      }
+      /* Single checkmark animation for copy button */
+      .feedback-btn.copied::after {
+        content: "✓";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--accent1);
+        animation: popCheckmark 0.4s ease-out;
+        z-index: 1;
+      }
+      @keyframes popCheckmark {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.5);
+        }
+        50% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1.1);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
       }
       .secondary-btn {
         flex: 1;
@@ -387,9 +545,9 @@
       }
 
       body.dark .secondary-btn:hover {
-        background: #343d4a; /* slightly lighter grey */
-        border-color: #4a5566;
-      }
+              background: color-mix(in srgb, var(--card-bg) 92%, var(--accent1) 8%);
+              border-color: var(--accent1);
+            }
       .settings-section {
         margin-top: 20px;
         padding-top: 20px;
@@ -424,6 +582,20 @@
         background: #545b66; /* slightly lighter on hover */
         border-color: #6b7280;
       }
+
+      /* Styling for the settings link (Click here to setup) */
+      #settingsBtn {
+        font-style: italic !important;
+        color: var(--accent1) !important;
+        text-decoration: underline !important;
+        text-underline-offset: 4px;
+        transition: all 0.2s ease;
+      }
+
+      #settingsBtn:hover {
+        color: var(--accent1) !important;
+      }
+
       /* Animated collapse for API settings */
       .api-settings {
         margin-top: 12px;
@@ -513,6 +685,9 @@
         line-height: 1.4;
         margin-top: 10px;
       }
+      #editApiBtn.remove-btn {
+        color: #1a237e;
+      }
       .api-guide a {
         color: #667eea;
         text-decoration: none;
@@ -582,7 +757,10 @@
           📋 <strong>Comprehensive</strong> - Detailed 5-7 paragraphs
         </button>
       </div>
-      <button class="action-btn" id="summarizeBtn">Summarize This Page</button>
+      <button class="action-btn" id="summarizeBtn">
+          Summarize This Page
+        </button>
+      </button>
       <div class="loader" id="loader">
         <div class="spinner">
           <div class="spinner-bar"></div>
@@ -597,28 +775,40 @@
       </div>
       <div class="result-area" id="resultArea">
         <div class="result-content" id="resultContent"></div>
-        <div class="result-actions">
-          <button class="secondary-btn" id="copyBtn">Copy</button>
-          <button class="secondary-btn" id="resetBtn">Start Over</button>
+        <div class="result-footer">
+          <div class="feedback-section">
+            <div class="feedback-buttons">
+              <button class="feedback-btn icon-btn" id="copyBtn" title="Copy to clipboard">
+                <img src="../icons/copy-svgrepo-com.svg" alt="Copy" />
+              </button>
+              <button class="feedback-btn icon-btn" id="resetBtn" title="Start over">
+                <img src="../icons/refresh-double-svgrepo-com.svg" alt="Start Over" />
+              </button>
+              <button class="feedback-btn thumbs-up" id="thumbsUpBtn" title="Thumbs up - Yes, helpful!">
+                <img src="../icons/thumbs-up-svgrepo-com.svg" alt="Thumbs up" />
+              </button>
+              <button class="feedback-btn thumbs-down" id="thumbsDownBtn" title="Thumbs down - Not helpful">
+                <img src="../icons/thumbs-down-svgrepo-com.svg" alt="Thumbs down" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="settings-section">
-        <button class="settings-btn" id="settingsBtn">
-          Set up your API key
-        </button>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0;">
+          <span style="color: var(--text-color); font-size: 13px; font-weight: 400;">Have you setup your API key?</span>
+          <a href="#" id="settingsBtn" style="text-decoration: none; font-weight: 500; font-size: 13px; cursor: pointer; white-space: nowrap;">Click here to setup</a>
+        </div>
         <div class="api-settings" id="apiSettings">
           <div
-            class="api-header"
             style="
               display: flex;
-              align-items: center;
               justify-content: space-between;
-              margin-bottom: 8px;
+              align-items: center;
+              margin-bottom: 10px;
             "
           >
-            <label style="font-size: 13px; font-weight: 600; margin: 0"
-              >Gemini API Key</label
-            >
+            <span style="font-weight: 600; color: var(--muted); font-size: 14px;">Gemini API Key</span>
             <div
               id="apiStatus"
               class="api-status"
@@ -640,20 +830,34 @@
               id="apiKeyInput"
               placeholder="Enter your API key (AIza...)"
               style="flex: 1"
+              readonly
             />
           </div>
-          <div id="apiKeyRow">
+          <div id="apiKeyRow" style="display: flex; gap: 10px; flex-wrap: wrap">
             <button
               class="action-btn"
               id="saveApiBtn"
-              style="font-size: 14px; padding: 10px"
+              style="
+                font-size: 14px;
+                padding: 10px;
+                display: none;
+                flex: 1;
+                min-width: 80px;
+              "
             >
               Save Key
             </button>
             <button
               class="remove-btn"
+              id="editApiBtn"
+              style="font-size: 14px; padding: 10px; flex: 1; min-width: 80px"
+            >
+              Edit Key
+            </button>
+            <button
+              class="remove-btn"
               id="removeApiBtn"
-              style="font-size: 14px; padding: 10px"
+              style="font-size: 14px; padding: 10px; flex: 1; min-width: 80px"
             >
               Remove Key
             </button>

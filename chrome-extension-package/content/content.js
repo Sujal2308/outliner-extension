@@ -12,6 +12,13 @@ class ContentExtractor {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       console.log("Content script received message:", message);
 
+      if (message.action === "ping") {
+        // Handshake to verify content script is responsive
+        console.log("Content script ping received - responding...");
+        sendResponse({ success: true, ready: true });
+        return false;
+      }
+
       if (message.action === "extractContent") {
         console.log("Processing extractContent request");
 
