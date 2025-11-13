@@ -1,5 +1,4 @@
 import React from "react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { ContainerScroll, CardSticky } from "@/components/ui/cards-stack";
 
 const HowItWorks = () => {
@@ -68,7 +67,7 @@ const HowItWorks = () => {
       <div className="relative container mx-auto">
         <div className="grid md:grid-cols-2 md:gap-8 xl:gap-12">
           {/* Left Side - Sticky Header */}
-          <div className="left-0 top-0 md:sticky md:h-screen md:pt-8 flex flex-col justify-start pl-16">
+          <div className="left-0 top-0 md:sticky md:h-screen md:pt-8 flex flex-col justify-start pl-8 md:pl-20 lg:pl-24">
             <h5 className="text-xs uppercase tracking-wide text-gray-600 mb-2">
               How It Works
             </h5>
@@ -78,21 +77,29 @@ const HowItWorks = () => {
                 less than a minute
               </span>
             </h2>
-            <p className="max-w-sm text-lg text-gray-600 mb-12">
+            {/* Mobile / Tablet: keep the original descriptive paragraph */}
+            <p className="block lg:hidden max-w-full text-lg text-gray-600 mb-12">
               Outliner makes web summarization effortless. Follow these simple
               steps to transform how you consume online content. No technical
               knowledge required.
             </p>
 
-            {/* Lottie Animation */}
-            <div className="hidden lg:block mb-8 w-96 h-96 ml-8">
-              <DotLottieReact
-                src="https://lottie.host/294e03ea-eff7-4fce-9cf8-c04a63e737dd/xngT6S3DDG.lottie"
-                loop
-                autoplay
-                style={{ background: "transparent" }}
+            {/* Desktop: show compact 'Follow these steps' with right-arrow icon (desktop-only) */}
+            <div className="hidden lg:flex items-center gap-4 text-gray-700 font-semibold mb-12 lg:text-2xl">
+              <span>Follow these steps</span>
+              <img
+                src="/right-arrow.png"
+                alt="arrow"
+                className="w-6 h-6 lg:w-10 lg:h-10"
               />
             </div>
+
+            {/* Desktop-only image */}
+            <img
+              src="/howitworks.jpg"
+              alt="How it works"
+              className="hidden lg:block mb-8 w-96 lg:w-[32rem] h-auto lg:ml-6 lg:mt-6 object-contain"
+            />
           </div>
 
           {/* Right Side - Stacked Cards */}
@@ -101,7 +108,7 @@ const HowItWorks = () => {
               <CardSticky
                 key={step.id}
                 index={index + 2}
-                className="w-full lg:max-w-[560px] rounded-2xl border-2 border-white/50 p-5 shadow-xl backdrop-blur-md bg-white/80 hover:bg-white transition-all duration-300 mx-4"
+                className="w-full lg:max-w-[380px] xl:max-w-[480px] rounded-2xl border-2 border-white/50 p-5 shadow-xl backdrop-blur-md bg-white/80 hover:bg-white transition-all duration-300 mx-4"
               >
                 <div className="flex items-start gap-3 mb-4">
                   <img
@@ -112,18 +119,18 @@ const HowItWorks = () => {
                   <div className="flex-1">
                     <div className="flex items-baseline gap-3">
                       <h3
-                        className={`text-2xl font-bold bg-gradient-to-r ${step.gradient} bg-clip-text text-transparent`}
+                        className={`text-2xl lg:text-3xl font-bold lg:font-extrabold bg-gradient-to-r ${step.gradient} bg-clip-text text-transparent lg:text-tomato`}
                       >
                         {step.number}
                       </h3>
-                      <h2 className="text-xl font-bold tracking-tight text-gray-900">
+                      <h2 className="text-xl lg:text-2xl lg:text-3xl lg:font-extrabold tracking-tight text-gray-900 lg:text-tomato font-sans">
                         {step.title}
                       </h2>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <p className="text-gray-600 text-sm lg:text-base leading-relaxed">
                   {step.description}
                 </p>
               </CardSticky>

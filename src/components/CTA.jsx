@@ -90,19 +90,7 @@ const CTA = () => {
           </div>
         </div>
 
-        {/* Social Proof */}
-        <div className="mt-12 pt-12 border-t border-white/20">
-          <p className="text-white/90 text-lg mb-4">
-            Trusted by professionals at
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 opacity-70">
-            <div className="text-white font-bold text-xl">Google</div>
-            <div className="text-white font-bold text-xl">Microsoft</div>
-            <div className="text-white font-bold text-xl">Amazon</div>
-            <div className="text-white font-bold text-xl">Meta</div>
-            <div className="text-white font-bold text-xl">Apple</div>
-          </div>
-        </div>
+        {/* Social proof removed per request */}
       </div>
     </section>
   );

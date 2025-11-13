@@ -1,4 +1,5 @@
 import React from "react";
+import { TextRotate } from "@/components/ui/text-rotate";
 
 const Hero = () => {
   return (
@@ -45,8 +46,14 @@ const Hero = () => {
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 mb-6 leading-tight">
               Summarize Any Webpage
               <br />
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                In Seconds
+              <span
+                className="text-white px-4 py-2 rounded-lg inline-block mt-3"
+                style={{ backgroundColor: "#ff6347" }}
+              >
+                <TextRotate
+                  texts={["in seconds", "in 3 modes", "100% free"]}
+                  rotationInterval={2500}
+                />
               </span>
             </h1>
 
