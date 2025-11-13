@@ -1,4 +1,5 @@
 import React from "react";
+import { GlowCard } from "@/components/ui/spotlight-card";
 
 const Modes = () => {
   const modes = [
@@ -6,28 +7,38 @@ const Modes = () => {
       name: "Brief Mode",
       icon: "⚡",
       color: "blue",
-      description: "Quick overview in 2-3 sentences",
-      example:
-        "Perfect for scanning headlines and getting the gist of an article in seconds.",
-      features: ["Ultra-fast", "Key points only", "Mobile-friendly"],
+      description:
+        "Perfect for quick reads and instant insights, so you never miss the main idea.",
+      features: [
+        "Ultra-fast",
+        "Key points only",
+        "Mobile-friendly",
+        "No fluff",
+      ],
     },
     {
       name: "Bullet Points",
       icon: "📝",
       color: "green",
-      description: "Structured list of main ideas",
-      example:
-        "Organized breakdown of key concepts, perfect for study notes and reference.",
-      features: ["Easy to scan", "Organized format", "Copy & paste ready"],
+      description: "Great for study notes, referencing, and easy scanning.",
+      features: [
+        "Easy to scan",
+        "Organized format",
+        "Copy & paste ready",
+        "Saves time",
+      ],
     },
     {
       name: "Comprehensive",
       icon: "📚",
       color: "purple",
-      description: "Detailed summary with context",
-      example:
-        "In-depth analysis preserving important details and nuances of the content.",
-      features: ["Full context", "Detailed insights", "No info loss"],
+      description: "Ideal for thorough understanding and research.",
+      features: [
+        "Full context",
+        "Detailed insights",
+        "No info loss",
+        "Best for research",
+      ],
     },
   ];
 
@@ -55,63 +66,68 @@ const Modes = () => {
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-neutral-800">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-            Choose Your Summary Style
-          </h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">
-            Three intelligent modes to match your reading preference
+        <div className="mb-16 text-left">
+          <div className="inline-block bg-green-600/90 px-4 py-2 shadow-lg mb-4">
+            <h2 className="text-4xl sm:text-4xl font-bold text-white bungee-regular">
+              CHOOSE YOUR SUMMARY STYLE
+            </h2>
+          </div>
+          <p className="text-xl text-white/90 max-w-2xl font-semibold mt-2 ml-4">
+            Three intelligent modes to match your reading preference.
+            <br />
+            Pick the one that fits your workflow best.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Side - Image */}
-          <div className="flex justify-center">
-            <img
-              src="/summaryStyle.png"
-              alt="Summary Styles"
-              className="w-full max-w-md h-auto"
-            />
-          </div>
-
-          {/* Right Side - Mode Cards */}
-          <div className="space-y-4">
-            {modes.map((mode, index) => {
-              const colors = colorClasses[mode.color];
-              return (
-                <div
-                  key={index}
-                  className={`bg-gradient-to-r ${colors.bg} p-6 rounded-xl text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="text-3xl flex-shrink-0 mt-1">
-                      {mode.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold mb-1">{mode.name}</h3>
-                      <p className="text-white/90 text-sm mb-3">
-                        {mode.description}
-                      </p>
-                      <p className="text-white/80 text-xs italic mb-3">
-                        "{mode.example}"
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {mode.features.map((feature, idx) => (
-                          <span
-                            key={idx}
-                            className="bg-white/20 px-3 py-1 rounded-full text-xs font-medium"
-                          >
-                            ✓ {feature}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
+        <div className="flex flex-col lg:flex-row gap-6 items-stretch">
+          {modes.map((mode, idx) => {
+            // Map mode name to icon file
+            let iconSrc = "";
+            if (mode.name === "Brief Mode") iconSrc = "/brief.png";
+            else if (mode.name === "Bullet Points") iconSrc = "/bullets.png";
+            else if (mode.name === "Comprehensive")
+              iconSrc = "/comprehension.png";
+            return (
+              <GlowCard
+                key={mode.name}
+                glowColor="green"
+                customSize={true}
+                className="flex-1 p-6 flex flex-col justify-between bg-white/5"
+              >
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    {iconSrc && (
+                      <img
+                        src={iconSrc}
+                        alt={mode.name + " icon"}
+                        className="w-7 h-7"
+                      />
+                    )}
+                    <h3 className="text-2xl font-bold anton-regular uppercase text-white">
+                      {mode.name}
+                    </h3>
                   </div>
+                  <p className="text-base lg:text-lg text-gray-300 mb-3 font-jost">
+                    {mode.description}
+                  </p>
+                  <ul className="list-none grid grid-cols-2 gap-x-4 gap-y-2 mb-2">
+                    {mode.features.map((feature, i) => (
+                      <li key={i} className="flex items-start gap-2 text-white">
+                        <img
+                          src="/checkmark.png"
+                          alt="checkmark"
+                          className="w-5 h-5 mt-1 opacity-70"
+                        />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              );
-            })}
-          </div>
+              </GlowCard>
+            );
+          })}
         </div>
+        <hr className="border-2 border-green-700 my-10" />
       </div>
     </section>
   );

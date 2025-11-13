@@ -68,10 +68,10 @@ const HowItWorks = () => {
         <div className="grid md:grid-cols-2 md:gap-8 xl:gap-12">
           {/* Left Side - Sticky Header */}
           <div className="left-0 top-0 md:sticky md:h-screen md:pt-8 flex flex-col justify-start pl-8 md:pl-20 lg:pl-24">
-            <h5 className="text-xs uppercase tracking-wide text-gray-600 mb-2">
+            <h5 className="text-xs uppercase tracking-wide text-gray-600 mb-2 bungee-regular">
               How It Works
             </h5>
-            <h2 className="mb-8 text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900">
+            <h2 className="mb-8 text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 bungee-regular">
               Get started in{" "}
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 less than a minute
@@ -86,7 +86,7 @@ const HowItWorks = () => {
 
             {/* Desktop: show compact 'Follow these steps' with right-arrow icon (desktop-only) */}
             <div className="hidden lg:flex items-center gap-4 text-gray-700 font-semibold mb-12 lg:text-2xl">
-              <span>Follow these steps</span>
+              <span className="lobster-regular">Follow these steps</span>
               <img
                 src="/right-arrow.png"
                 alt="arrow"
@@ -118,19 +118,14 @@ const HowItWorks = () => {
                   />
                   <div className="flex-1">
                     <div className="flex items-baseline gap-3">
-                      <h3
-                        className={`text-2xl lg:text-3xl font-bold lg:font-extrabold bg-gradient-to-r ${step.gradient} bg-clip-text text-transparent lg:text-tomato`}
-                      >
-                        {step.number}
-                      </h3>
-                      <h2 className="text-xl lg:text-2xl lg:text-3xl lg:font-extrabold tracking-tight text-gray-900 lg:text-tomato font-sans">
+                      <h2 className="text-xl lg:text-2xl lg:text-3xl lg:font-extrabold tracking-tight text-gray-900 lg:text-black bungee-regular">
                         {step.title}
                       </h2>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-gray-600 text-sm lg:text-base leading-relaxed">
+                <p className="text-gray-600 text-sm lg:text-base leading-relaxed font-jost">
                   {step.description}
                 </p>
               </CardSticky>
