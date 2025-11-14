@@ -45,7 +45,7 @@ const Hero = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center animate-slide-up">
           {/* Left Side - Text Content */}
           <div className="text-left">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 mb-6 leading-tight bungee-regular">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 mb-6 leading-tight bungee-regular">
               Summarize Any Webpage
               <br />
               <span
