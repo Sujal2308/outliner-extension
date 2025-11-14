@@ -51,7 +51,10 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="relative min-h-screen bg-white py-20 px-4 sm:px-6 lg:px-8">
+    <section
+      id="howitworks"
+      className="relative min-h-screen bg-white pt-32 pb-20 px-4 sm:px-6 lg:px-8"
+    >
       {/* Background blobs (like Hero) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float"></div>
@@ -67,7 +70,7 @@ const HowItWorks = () => {
       <div className="relative container mx-auto">
         <div className="grid md:grid-cols-2 md:gap-8 xl:gap-12">
           {/* Left Side - Sticky Header */}
-          <div className="left-0 top-0 md:sticky md:h-screen md:pt-8 flex flex-col justify-start pl-8 md:pl-20 lg:pl-24">
+          <div className="left-0 top-0 md:sticky md:h-screen md:pt-8 flex flex-col justify-start px-4 md:pl-20 lg:pl-24">
             <h5 className="text-xs uppercase tracking-wide text-gray-600 mb-2 bungee-regular">
               How It Works
             </h5>
@@ -77,15 +80,8 @@ const HowItWorks = () => {
                 less than a minute
               </span>
             </h2>
-            {/* Mobile / Tablet: keep the original descriptive paragraph */}
-            <p className="block lg:hidden max-w-full text-lg text-gray-600 mb-12">
-              Outliner makes web summarization effortless. Follow these simple
-              steps to transform how you consume online content. No technical
-              knowledge required.
-            </p>
-
-            {/* Desktop: show compact 'Follow these steps' with right-arrow icon (desktop-only) */}
-            <div className="hidden lg:flex items-center gap-4 text-gray-700 font-semibold mb-12 lg:text-2xl">
+            {/* Compact 'Follow these steps' with right-arrow icon (visible on mobile + desktop) */}
+            <div className="flex items-center gap-4 text-gray-700 font-semibold mb-12 text-lg lg:text-2xl">
               <span className="lobster-regular">Follow these steps</span>
               <img
                 src="/right-arrow.png"
@@ -103,12 +99,12 @@ const HowItWorks = () => {
           </div>
 
           {/* Right Side - Stacked Cards */}
-          <ContainerScroll className="min-h-[160vh] lg:min-h-[120vh] space-y-6 py-12 px-8">
+          <ContainerScroll className="min-h-[160vh] lg:min-h-[120vh] space-y-6 py-12 px-4 sm:px-8 flex flex-col items-center">
             {steps.map((step, index) => (
               <CardSticky
                 key={step.id}
                 index={index + 2}
-                className="w-full lg:max-w-[380px] xl:max-w-[480px] rounded-2xl border-2 border-white/50 p-5 shadow-xl backdrop-blur-md bg-white/80 hover:bg-white transition-all duration-300 mx-4"
+                className="w-full sm:max-w-xl lg:max-w-[380px] xl:max-w-[480px] rounded-2xl border-2 border-white/50 p-5 shadow-xl backdrop-blur-md bg-white/80 hover:bg-white transition-all duration-300 mx-auto"
               >
                 <div className="flex items-start gap-3 mb-4">
                   <img

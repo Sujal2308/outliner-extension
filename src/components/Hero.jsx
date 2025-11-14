@@ -32,9 +32,11 @@ const Hero = () => {
             rel="noopener noreferrer"
             className="hidden sm:inline-flex items-center space-x-2 bg-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-blue-300"
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-            </svg>
+            <img
+              src="https://www.google.com/chrome/static/images/chrome-logo.svg"
+              alt="Chrome logo"
+              className="w-5 h-5"
+            />
             <span className="font-semibold text-gray-800">Add to Chrome</span>
           </a>
         </nav>
@@ -43,7 +45,7 @@ const Hero = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center animate-slide-up">
           {/* Left Side - Text Content */}
           <div className="text-left">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 mb-6 leading-tight bungee-regular">
               Summarize Any Webpage
               <br />
               <span
@@ -57,7 +59,7 @@ const Hero = () => {
               </span>
             </h1>
 
-            <p className="text-xl sm:text-2xl text-gray-600 mb-8 leading-relaxed">
+            <p className="text-xl sm:text-2xl text-gray-600 mb-8 leading-relaxed font-jost">
               Transform lengthy articles into concise summaries with AI-powered
               intelligence. Save time, stay informed, and boost your
               productivity.
@@ -80,8 +82,17 @@ const Hero = () => {
                 </svg>
                 <span>Install Free Extension</span>
               </a>
-              <button className="btn-secondary w-full sm:w-auto">
-                Watch Demo
+              <button
+                className="btn-secondary w-full sm:w-auto"
+                onClick={() => {
+                  const el = document.getElementById("howitworks");
+                  if (el) {
+                    // Use native scrollIntoView which respects CSS scroll-margin-top
+                    el.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }
+                }}
+              >
+                See How It Works
               </button>
             </div>
 

@@ -10,9 +10,11 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-xl">O</span>
-              </div>
+              <img
+                src="/pencil.png"
+                alt="Outliner Logo"
+                className="w-10 h-10"
+              />
               <span className="text-2xl font-bold text-white">Outliner</span>
             </div>
             <p className="text-gray-400 mb-4 max-w-md">
