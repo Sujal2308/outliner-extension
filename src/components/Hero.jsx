@@ -97,25 +97,25 @@ const Hero = () => {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6">
-              <div className="text-left">
-                <div className="text-3xl sm:text-4xl font-bold text-blue-600 mb-2">
-                  10K+
+            <div className="grid grid-cols-3 gap-6 justify-items-center sm:justify-items-start text-center sm:text-left">
+              <div className="flex flex-col items-center sm:items-start">
+                <div className="text-2xl sm:text-4xl font-bold text-blue-600 mb-2">
+                  100+
                 </div>
                 <div className="text-sm sm:text-base text-gray-600">
                   Active Users
                 </div>
               </div>
-              <div className="text-left">
-                <div className="text-3xl sm:text-4xl font-bold text-blue-600 mb-2">
-                  500K+
+              <div className="flex flex-col items-center">
+                <div className="text-2xl sm:text-4xl font-bold text-blue-600 mb-2">
+                  500+
                 </div>
-                <div className="text-sm sm:text-base text-gray-600">
-                  Pages Summarized
+                <div className="text-sm sm:text-base text-gray-600 text-center">
+                  Summarizations
                 </div>
               </div>
-              <div className="text-left">
-                <div className="text-3xl sm:text-4xl font-bold text-blue-600 mb-2">
+              <div className="flex flex-col items-center sm:items-start">
+                <div className="text-2xl sm:text-4xl font-bold text-blue-600 mb-2">
                   4.9★
                 </div>
                 <div className="text-sm sm:text-base text-gray-600">

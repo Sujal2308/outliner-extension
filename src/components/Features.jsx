@@ -7,7 +7,7 @@ const Features = () => {
       icon: "/free.png",
       title: "100% Free & No Signups",
       description:
-        "Truly free and requires no sign-ups or accounts. Install the extension and start summarizing immediately — no payments, no trials, no data collection. If you prefer, you can optionally provide your Gemini API key for faster, personalized results.",
+        "Truly free and requires no sign-ups or accounts. Install the extension and start summarizing immediately — no payments, no trials, no data collection.Just configure your free Gemini API key from Google AI Studio.",
       gradient: "from-green-400 to-emerald-600",
       animation:
         "https://lottie.host/5f417ec9-1d77-4b37-aa9c-66fb7c8bd496/rUXPT9qBy1.lottie",
@@ -85,7 +85,7 @@ const Features = () => {
                       </h3>
                     </div>
                     <div className="mb-4">
-                      <p className="text-gray-600 leading-relaxed text-sm lg:text-lg font-jost">
+                      <p className="text-gray-600 leading-relaxed text-base lg:text-lg font-jost">
                         {feature.description}
                       </p>
                     </div>
@@ -120,7 +120,7 @@ const Features = () => {
                       {feature.title}
                     </h3>
                   </div>
-                  <p className="text-gray-600 leading-relaxed text-sm lg:text-lg font-jost">
+                  <p className="text-gray-600 leading-relaxed text-base lg:text-lg font-jost">
                     {feature.description}
                   </p>
                 </>
