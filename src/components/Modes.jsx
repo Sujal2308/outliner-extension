@@ -88,11 +88,55 @@ const Modes = () => {
             else if (mode.name === "Comprehensive")
               iconSrc = "/comprehension.png";
             return (
-              <GlowCard
+              <div
                 key={mode.name}
+                className="flex-1 p-6 flex flex-col justify-between bg-white/5 rounded-2xl border border-white/20 lg:hidden"
+              >
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    {iconSrc && (
+                      <img
+                        src={iconSrc}
+                        alt={mode.name + " icon"}
+                        className="w-7 h-7"
+                      />
+                    )}
+                    <h3 className="text-2xl font-bold anton-regular uppercase text-white">
+                      {mode.name}
+                    </h3>
+                  </div>
+                  <p className="text-base lg:text-lg text-gray-300 mb-3 font-jost">
+                    {mode.description}
+                  </p>
+                  <ul className="list-none grid grid-cols-2 gap-x-4 gap-y-2 mb-2">
+                    {mode.features.map((feature, i) => (
+                      <li key={i} className="flex items-start gap-2 text-white">
+                        <img
+                          src="/checkmark.png"
+                          alt="checkmark"
+                          className="w-5 h-5 mt-1 opacity-70"
+                        />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
+          {modes.map((mode, idx) => {
+            // Map mode name to icon file for desktop
+            let iconSrc = "";
+            if (mode.name === "Brief Mode") iconSrc = "/brief.png";
+            else if (mode.name === "Bullet Points") iconSrc = "/bullets.png";
+            else if (mode.name === "Comprehensive")
+              iconSrc = "/comprehension.png";
+            return (
+              <GlowCard
+                key={mode.name + "-desktop"}
                 glowColor="green"
                 customSize={true}
-                className="flex-1 p-6 flex flex-col justify-between bg-white/5"
+                className="flex-1 p-6 flex-col justify-between bg-white/5 hidden lg:flex"
               >
                 <div>
                   <div className="flex items-center gap-2 mb-2">
