@@ -16,7 +16,10 @@ const CTA = () => {
       <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         {/* Left: text and CTAs (center on small, left on lg) */}
         <div className="text-center lg:text-left lg:pr-8">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight bungee-regular">
+          <h2
+            className="text-4xl sm:text-4
+          xl lg:text-6xl font-extrabold text-white mb-6 leading-tight bungee-regular"
+          >
             Ready to Save Hours
             <br />
             Every Week?
